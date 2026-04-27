@@ -44,7 +44,7 @@
                     <h3 class="text-base font-medium text-zinc-800 mb-6">Des questions ?</h3>
                     <ul class="flex flex-col gap-3 list-none">
                         <li>
-                            <a href="#" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors"> La FAQ </a>
+                            <a href="#" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">La FAQ </a>
                         </li>
                         <li>
                             <a href="#" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">Nous contacter</a>
@@ -105,6 +105,18 @@
                     <h4 class="text-base font-medium text-zinc-800 mb-0.5">Email</h4>
                     <p class="text-sm text-zinc-500 leading-relaxed">contact@le-girofard.org</p>
                 </div>
+            </div>
+            <div class="flex items-start gap-2.5 flex-1">
+                <div class="size-8 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.667 8.335c0 4.16-4.616 8.494-6.166 9.832a.83.83 0 0 1-1.002 0c-1.55-1.338-6.166-5.672-6.166-9.832a6.667 6.667 0 0 1 13.334 0" stroke="#45556c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M7.5 8.335 9.167 10 12.5 6.668" stroke="#45556c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-base font-medium text-zinc-800 mb-0.5">Horaires</h4>
+                    <p class="text-sm text-zinc-500 leading-relaxed">Fermé les Lundis, Samedi et Dimanche<br />Mardi et Jeudi: 10h-13h et 14h-18h<br />Mercredi et Vendredi: 10h-13h et 14h-19h30 </p>
+                    </div>
             </div>
         </div>
         <div class="flex flex-col md:flex-row justify-between items-center gap-4 py-4 border-t border-zinc-300">

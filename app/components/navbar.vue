@@ -16,7 +16,7 @@
             <li><a class="hover:text-gray-500/80 transition" href="#">La FAQ</a></li>
         </ul>
 
-        <button type="button" class="bg-white text-gray-600 border border-gray-300 md:inline hidden text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full">
+        <button type="button" class="bg-white text-gray-600 border border-gray-300 md:inline hidden text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-[10px]">
             Nous soutenir
         </button>
 
@@ -39,6 +39,19 @@
             <button type="button" class="bg-white text-gray-600 border border-gray-300 mt-6 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full">
                 Nous soutenir
             </button>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 h-1 flex">
+            <div class="flex-1 bg-[#5A1E6A]"></div>
+            <div class="flex-1 bg-[#925FB6]"></div>
+            <div class="flex-1 bg-[#7BCCE5]"></div>
+            <div class="flex-1 bg-[#EFA9C3]"></div>
+            <div class="flex-1 bg-[#73B325]"></div>
+            <div class="flex-1 bg-[#EAE01F]"></div>
+            <div class="flex-1 bg-[#ED8412]"></div>
+            <div class="flex-1 bg-[#DD1B11]"></div>
+            <div class="flex-1 bg-[#8F5011]"></div>
+            <div class="flex-1 bg-[#000000]"></div>
         </div>
     </nav>
 </template>
