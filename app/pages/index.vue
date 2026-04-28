@@ -31,7 +31,7 @@
     <section>
       <div class="text-center bg-[#A09FE3] py-32 flex flex-col items-center justify-center">
         <h2 class="text-3xl font-semibold text-black mb-6">Le site est encore en développement</h2>
-        <p class="text-sm md:text-base text-slate-600"><br />Pour toute demande, n'hésitez pas à nous contacter ou à passer au local !</p>
+        <p class="text-md md:text-base text-black mx-4"><br />Pour toute demande, n'hésitez pas à nous contacter ou à passer au local !</p>
       </div>
     </section>
 </template>
