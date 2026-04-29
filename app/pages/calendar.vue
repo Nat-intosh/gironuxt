@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { formatDateFrench } from '~/utils/formatDate'
 
 const { findOne, find } = useStrapi()
@@ -24,9 +24,16 @@ const getImageUrl = (item: any) => {
   return `${strapiUrl}${path}`
 }
 
-const selectedCategory = ref<string | null>(null)
+const route = useRoute()
+
+const selectedCategory = ref<string | null>(route.query.category as string || null)
 const selectedEvent = ref<any>(null)
 const showModal = ref(false)
+
+// Watch for route changes to update selectedCategory
+watch(() => route.query.category, (newCategory) => {
+  selectedCategory.value = newCategory as string || null
+})
 
 const openModal = (event: any) => {
   selectedEvent.value = event
@@ -103,7 +110,9 @@ const filteredRemainingEvents = computed(() => {
 })
 
 const toggleCategory = (category: string) => {
-  selectedCategory.value = selectedCategory.value === category ? null : category
+  const newCategory = selectedCategory.value === category ? null : category
+  selectedCategory.value = newCategory
+  navigateTo({ query: { ...route.query, category: newCategory || undefined } })
 }
 
 </script>
@@ -266,6 +275,12 @@ const toggleCategory = (category: string) => {
                   <p v-else-if="selectedEvent?.shortdescription" class="text-zinc-700 leading-relaxed text-sm">
                     {{ selectedEvent.shortdescription }}
                   </p>
+                  
+                </div>
+                <div class="py-4">
+                  <a v-if="selectedEvent?.link" class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-800 text-black active:scale-95 transition-all" type="button" :href="selectedEvent.link" target="_blank">
+                        Prends ta place !
+                    </a>
                 </div>
               </div>
             </div>
