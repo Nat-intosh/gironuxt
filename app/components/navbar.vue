@@ -1,5 +1,5 @@
 <template>
-    <nav class="relative w-full bg-white text-gray-700 shadow-[0px_4px_25px_0px_#0000000D] transition-all">
+    <nav class="relative fixed w-full bg-white text-gray-700 shadow-[0px_4px_25px_0px_#0000000D] transition-all">
         <div class="mx-auto flex h-[96px] lg:max-w-6xl items-center justify-between px-4 lg:px-0">
             <a href="/" class="text-indigo-600">
                 <svg width="78" height="64" viewBox="0 0 620 518" fill="none" xmlns="http://www.w3.org/2000/svg">

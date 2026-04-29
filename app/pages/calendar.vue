@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, computed } from 'vue'
 import { formatDateFrench } from '~/utils/formatDate'
 
 const { findOne, find } = useStrapi()
@@ -23,6 +24,19 @@ const getImageUrl = (item: any) => {
   return `${strapiUrl}${path}`
 }
 
+const selectedCategory = ref<string | null>(null)
+
+const categoryFilters = computed(() => {
+  if (!events.value?.data) return []
+
+  const categories = events.value.data
+    .map((event: any) => event.event_category)
+    .filter((cat: any) => cat?.public && cat?.category)
+    .map((cat: any) => cat.category)
+
+  return Array.from(new Set(categories))
+})
+
 const upcomingEvents = computed(() => {
   if (!events.value?.data) return []
   
@@ -32,17 +46,44 @@ const upcomingEvents = computed(() => {
     .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
 })
 
+const filteredEvents = computed(() => {
+  if (!selectedCategory.value) return upcomingEvents.value
+  return upcomingEvents.value.filter((event: any) => event.event_category?.category === selectedCategory.value)
+})
+
+const toggleCategory = (category: string) => {
+  selectedCategory.value = selectedCategory.value === category ? null : category
+}
+
 </script>
 
 
 <template>
   <div class="flex flex-col items-center justify-center py-20 max-w-6xl mx-4 lg:mx-auto">
     <div class="">
-      <h2 class="text-base uppercase text-zinc-900"> L'agenda</h2>
+      <h2 class="text-base uppercase text-zinc-900">L'agenda</h2>
       <p class="text-2xl font-semibold text-zinc-900 mb-6">On se voit quand ?</p>
+
+      <div class="mb-6 flex flex-wrap gap-2">
+        <!-- <span class="text-sm font-medium text-zinc-700">Filtres :</span> -->
+        <button
+          v-for="category in categoryFilters"
+          :key="category"
+          type="button"
+          @click="toggleCategory(category)"
+          class="inline-flex items-center gap-2 rounded-[10px] border px-3 py-2 text-sm transition focus:outline-none"
+          :class="selectedCategory === category
+            ? 'border-zinc-900 bg-zinc-900 text-white'
+            : 'border-zinc-300 bg-white text-zinc-700 hover:border-zinc-900 hover:text-zinc-900'"
+        >
+          <span>{{ category }}</span>
+          <span v-if="selectedCategory === category" class="text-xs">✕</span>
+        </button>
+      </div>
+
       <h3 class="text-lg font-semibold text-zinc-900 py-4">Cette semaine</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <article v-for="item in upcomingEvents" :key="item.id">
+            <article v-for="item in filteredEvents" :key="item.id">
               <div class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-colors rounded-xl w-lg lg:w-sm h-full">
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
                   <div class="ml-4">
