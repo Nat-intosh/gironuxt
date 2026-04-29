@@ -25,6 +25,20 @@ const getImageUrl = (item: any) => {
 }
 
 const selectedCategory = ref<string | null>(null)
+const selectedEvent = ref<any>(null)
+const showModal = ref(false)
+
+const openModal = (event: any) => {
+  selectedEvent.value = event
+  showModal.value = true
+}
+
+const closeModal = () => {
+  showModal.value = false
+  setTimeout(() => {
+    selectedEvent.value = null
+  }, 300)
+}
 
 const categoryFilters = computed(() => {
   if (!events.value?.data) return []
@@ -118,27 +132,36 @@ const toggleCategory = (category: string) => {
         </button>
       </div>
 
-      <h3 class="text-lg font-semibold text-zinc-900 py-4">Cette semaine</h3>
+      <h3 v-if="filteredThisWeekEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4">Cette semaine</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <article v-for="item in filteredThisWeekEvents" :key="item.id">
-              <div class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-colors rounded-xl w-lg lg:w-sm h-full">
+              <div 
+                @click="openModal(item)"
+                class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+              >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                           {{ formatDateFrench(item.date) }} </div>
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
-                      <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
-                      <div class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5">{{ item.place }}</div>
+                      <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>    
+                      <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg> {{ item.place }}</p>
                   </div>
               </div>
             </article>
         </div>
 
-      <h3 class="text-lg font-semibold text-zinc-900 py-4">Semaine prochaine</h3>
+      <h3 v-if="filteredNextWeekEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4 pt-16">Semaine prochaine</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <article v-for="item in filteredNextWeekEvents" :key="item.id">
-              <div class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-colors rounded-xl w-lg lg:w-sm h-full">
+              <div 
+                @click="openModal(item)"
+                class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+              >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
@@ -146,16 +169,22 @@ const toggleCategory = (category: string) => {
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
                       <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
-                      <div class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5">{{ item.place }}</div>
+                      <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg> {{ item.place }}</p>
                   </div>
               </div>
             </article>
         </div>
 
-      <h3 class="text-lg font-semibold text-zinc-900 py-4">Et le reste</h3>
+      <h3 v-if="filteredRemainingEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4 pt-16">Prochainement</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <article v-for="item in filteredRemainingEvents" :key="item.id">
-              <div class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-colors rounded-xl w-lg lg:w-sm h-full">
+              <div 
+                @click="openModal(item)"
+                class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+              >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
@@ -163,11 +192,122 @@ const toggleCategory = (category: string) => {
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
                       <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
-                      <div class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5">{{ item.place }}</div>
+                      <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg> {{ item.place }}</p>
                   </div>
               </div>
             </article>
         </div>
     </div>
+
+    <!-- Modal -->
+    <Transition name="modal-fade">
+      <div v-if="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center" @click.self="closeModal">
+        <Transition name="modal-scale">
+          <div v-if="showModal" class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <!-- Close button -->
+            <div class="sticky top-0 bg-white border-b border-zinc-200 flex items-center justify-between p-6">
+              <h2 class="text-2xl font-semibold text-zinc-900">{{ selectedEvent?.name }}</h2>
+              <button
+                @click="closeModal"
+                class="text-zinc-400 hover:text-zinc-600 transition-colors"
+              >
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Content -->
+            <div class="p-6 flex flex-col md:flex-row gap-6">
+              <!-- Cover Image on Left -->
+              <img 
+                v-if="selectedEvent?.cover" 
+                :src="getImageUrl(selectedEvent)" 
+                alt="Event cover" 
+                class="w-full h-full md:w-64 rounded-xl aspect-[3/4] object-cover flex-shrink-0"
+              />
+
+              <!-- Info on Right -->
+              <div class="flex-1 space-y-4">
+                <!-- Date and Location -->
+                <div class="space-y-3">
+                  <div class="flex items-center gap-3 text-zinc-700">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text-lg">{{ formatDateFrench(selectedEvent?.date) }}</span>
+                  </div>
+                  <div class="flex items-center gap-3 text-zinc-700">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="text-lg">{{ selectedEvent?.place }}</span>
+                  </div>
+                </div>
+
+                <!-- Category -->
+                <div v-if="selectedEvent?.event_category">
+                  <p class="text-sm w-fit text-zinc-600 border rounded-full px-3 py-1 border-zinc-400 font-medium">
+                    {{ selectedEvent.event_category.category }}
+                  </p>
+                </div>
+              
+
+                <!-- Full Description -->
+                <div class="space-y-3 pt-4 border-t border-zinc-200">
+                  <h3 class="text-lg font-semibold text-zinc-900">Description</h3>
+                  <p v-if="selectedEvent?.longdescription" class="text-zinc-700 leading-relaxed whitespace-pre-wrap text-sm">
+                    {{ selectedEvent.longdescription }}
+                  </p>
+                  <p v-else-if="selectedEvent?.shortdescription" class="text-zinc-700 leading-relaxed text-sm">
+                    {{ selectedEvent.shortdescription }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+/* Modal Fade Animation - Backdrop */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+}
+
+.modal-fade-enter-to,
+.modal-fade-leave-from {
+  opacity: 1;
+}
+
+/* Modal Scale Animation - Content */
+.modal-scale-enter-active,
+.modal-scale-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-scale-enter-from,
+.modal-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.95) translateY(-20px);
+}
+
+.modal-scale-enter-to,
+.modal-scale-leave-from {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+</style>

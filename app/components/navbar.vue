@@ -10,9 +10,9 @@
             <ul class="md:flex hidden items-center gap-10">
                 <li><a class="hover:text-gray-500/80 transition" href="#">Accueil</a></li>
                 <li><a class="hover:text-gray-500/80 transition" href="#">L'association</a></li>
-                <li><a class="hover:text-gray-500/80 transition" href="#">Nos services</a></li>
+                <li><a class="hover:text-gray-500/80 transition" href="">Nos services</a></li>
                 <li><a class="hover:text-gray-500/80 transition" href="#">Nos actions</a></li>
-                <li><a class="hover:text-gray-500/80 transition" href="#">L'agenda</a></li>
+                <li><a class="hover:text-gray-500/80 transition" href="/calendar">L'agenda</a></li>
                 <li><a class="hover:text-gray-500/80 transition" href="#">La FAQ</a></li>
             </ul>
 

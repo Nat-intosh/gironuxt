@@ -3,7 +3,7 @@
     <div class="max-w-6xl mx-auto">
         <div class="flex flex-col lg:flex-row gap-16 pb-12">
             <div class="flex flex-wrap sm:flex-nowrap flex-1 justify-between gap-8 w-full max-w-6xl">
-                <div class="flex-1 max-w-full lg:max-w-sm">
+                <div class="lg:flex-1 max-w-full lg:max-w-sm">
                     <div class="mb-6">
                         <svg width="128" height="131.46" viewBox="0 0 619.1 618.6" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path style="fill:#78e0af" d="M394.3 106.5 442.4 0l7.7 116.6L545 48.4l-51.6 104.9 116.3-11.6-97.1 65 106.5 48.1-116.6 7.7 68.2 94.9-104.9-51.6 11.6 116.3-65-97.1-48.1 106.5-7.7-116.6-94.9 68.2 51.6-104.9L197 289.8l97.1-65-106.5-48.1 116.6-7.7L236 74.1l104.9 51.6L329.3 9.4z"/>
@@ -11,7 +11,7 @@
                         </svg>
                     </div>
                     <p class="text-sm leading-7 text-zinc-500 mb-7 max-w-80">Le Girofard est le centre pour les personnes Lesbiennes, gays, bi, trans intersexe, non binaire et leurs allié·es de Bordeaux. Il a pour objectif d’être un lieu d’accueil, d’écoute et de convivialité.</p>
-                    <div class="flex gap-4">
+                    <div class="flex gap-4 ">
                         <a href="#" class="size-9 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center hover:bg-zinc-50 transition-colors">
                             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M13 .5H4.667C2.365.5.5 2.353.5 4.638v8.276c0 2.285 1.865 4.138 4.167 4.138H13c2.301 0 4.167-1.853 4.167-4.138V4.638C17.167 2.353 15.3.5 13 .5" stroke="#78E0AF" stroke-linecap="round" stroke-linejoin="round"></path>
