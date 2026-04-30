@@ -104,9 +104,9 @@ const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on fait ?</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
           <article v-for="item in actionsItems" :key="item.id" class="h-full">
-            <div class="flex items-stretch md:gap-4 h-full rounded-[10px] overflow-hidden">
+            <div class="flex items-stretch md:gap-4 h-full rounded-[10px] py-4 overflow-hidden">
               <img class="object-cover w-1/4 md:w-1/5 h-full rounded-[10px]" :src="getImageUrl(item)" alt="">
-              <div class="flex flex-1 flex-col justify-between leading-normal px-4 md:py-8">
+              <div class="flex flex-1 flex-col justify-between leading-normal px-4 md:py-0">
                 <h5 class="text-lg font-semibold text-heading mb-2">{{item.name}}</h5>
                 <p class="text-body">{{item.short_description}}</p>
               </div>
