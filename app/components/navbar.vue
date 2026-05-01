@@ -32,7 +32,7 @@
                 <li><a href="#" class="text-sm">L'association</a></li>
                 <li><a href="#" class="text-sm">Nos services</a></li>
                 <li><a href="#" class="text-sm">Nos actions</a></li>
-                <li><a href="#" class="text-sm">L'agenda</a></li>
+                <li><a href="/calendar" class="text-sm">L'agenda</a></li>
                 <li><a href="#" class="text-sm">La FAQ</a></li>
             </ul>
 
