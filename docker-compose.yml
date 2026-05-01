@@ -12,4 +12,4 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - giro-network
+      - giro_network
