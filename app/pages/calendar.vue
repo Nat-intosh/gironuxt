@@ -10,7 +10,8 @@ const { data: events } = await useAsyncData(
   () => find('events', { populate: ['cover', 'event_category'] })
 )
 
-const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
+const strapiUrl = config.public.strapiPublicUrl || "http://localhost:1337"
+
 
 const getImageUrl = (item: any) => {
   const path = item.cover?.formats?.small?.url 

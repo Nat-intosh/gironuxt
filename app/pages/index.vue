@@ -32,13 +32,14 @@ const getImageUrl = (item: any) => {
   // If already absolute, return as-is
   if (path.startsWith('http')) return path
   // Otherwise prepend Strapi base URL
-  return `${strapiUrl}${path}`
+  return `${strapiPublicUrl}${path}`
 }
 
 const serviceItems = computed(() => services.value?.data || [])
 const actionsItems = computed(() => actions.value?.data || [])
 
 const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
+const strapiPublicUrl = config.public.strapiPublicUrl || "http://localhost:1337"
 
 </script>
 
