@@ -8,6 +8,12 @@ export function formatDateFrench(date: string | Date): string {
   const dayNum = d.getDate()
   const monthName = months[d.getMonth()]
   const hours = d.getHours()
+  const minutes = d.getMinutes()
   
-  return `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${dayNum} ${monthName} à ${hours} heure${hours > 1 ? 's' : ''}`
+  let timeString = `${hours} heure${hours > 1 ? 's' : ''}`
+  if (minutes > 0) {
+    timeString += ` ${minutes}`
+  }
+  
+  return `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${dayNum} ${monthName} à ${timeString}`
 }
