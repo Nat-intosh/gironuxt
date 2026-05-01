@@ -39,7 +39,7 @@ const serviceItems = computed(() => services.value?.data || [])
 const actionsItems = computed(() => actions.value?.data || [])
 
 const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
-const strapiPublicUrl = config.public.strapiPublicUrl || "http://localhost:1337"
+const strapiPublicUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
 
 </script>
 
