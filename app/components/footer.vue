@@ -73,8 +73,9 @@
             <div class="flex items-start gap-2.5 flex-1">
                 <div class="size-8 rounded-lg bg-zinc-100 border border-zinc-200 flex items-center justify-center">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16.667 8.335c0 4.16-4.616 8.494-6.166 9.832a.83.83 0 0 1-1.002 0c-1.55-1.338-6.166-5.672-6.166-9.832a6.667 6.667 0 0 1 13.334 0" stroke="#45556c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        <path d="M7.5 8.335 9.167 10 12.5 6.668" stroke="#45556c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M5.25 3.25h9.5M7.5 3.25v2.5M12.5 3.25v2.5" stroke="#45556c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <rect x="3.25" y="5.75" width="13.5" height="10.75" rx="1.25" stroke="#45556c" stroke-width="1.5"/>
+                        <path d="M6.5 9.5h1.5M10 9.5h1.5M13.5 9.5h1.5M6.5 12.5h1.5M10 12.5h1.5M13.5 12.5h1.5" stroke="#45556c" stroke-width="1.5" stroke-linecap="round"/>
                     </svg>
                 </div>
                 <div>

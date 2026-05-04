@@ -10,9 +10,17 @@ export function formatDateFrench(date: string | Date): string {
   const hours = d.getHours()
   const minutes = d.getMinutes()
   
-  let timeString = `${hours} heure${hours > 1 ? 's' : ''}`
-  if (minutes > 0) {
-    timeString += ` ${minutes}`
+  let timeString
+  if (hours === 12) {
+    timeString = 'midi'
+    if (minutes > 0) {
+      timeString += ` ${minutes}`
+    }
+  } else {
+    timeString = `${hours} heure${hours > 1 ? 's' : ''}`
+    if (minutes > 0) {
+      timeString += ` ${minutes}`
+    }
   }
   
   return `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${dayNum} ${monthName} à ${timeString}`

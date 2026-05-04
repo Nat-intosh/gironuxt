@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { formatDateFrench } from '~/utils/formatDate'
 
 const { findOne, find } = useStrapi()
@@ -35,28 +35,72 @@ const getImageUrl = (item: any) => {
   return `${strapiPublicUrl}${path}`
 }
 
-const serviceItems = computed(() => services.value?.data || [])
-const actionsItems = computed(() => actions.value?.data || [])
+const serviceItems = computed(() => (services.value?.data as any[]) || [])
+const actionsItems = computed(() => (actions.value?.data as any[]) || [])
+
+const upcomingEvents = computed(() => {
+  if (!events.value?.data) return []
+  
+  const now = new Date()
+  return (events.value.data as any[])
+    .filter((event: any) => new Date(event.date) >= now)
+    .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(0, 4)
+})
 
 const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
+
+const targetPrideDate = new Date('2026-05-30T13:00:00')
+const countdownLabel = ref('')
+let countdownInterval: number | undefined
+
+const formatCountdown = (ms: number) => {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000))
+  const days = Math.floor(totalSeconds / 86400)
+  const hours = Math.floor((totalSeconds % 86400) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  return `${days} jour${days > 1 ? 's' : ''} ${hours} heure${hours > 1 ? 's' : ''} ${minutes} minute${minutes > 1 ? 's' : ''} et ${seconds} seconde${seconds > 1 ? 's' : ''}`
+}
+
+const updateCountdown = () => {
+  const now = new Date()
+  const diff = targetPrideDate.getTime() - now.getTime()
+
+  countdownLabel.value = diff <= 0
+    ? 'C’est parti !'
+    : formatCountdown(diff)
+}
+
+onMounted(() => {
+  updateCountdown()
+  countdownInterval = window.setInterval(updateCountdown, 1000)
+})
+
+onUnmounted(() => {
+  if (countdownInterval !== undefined) {
+    clearInterval(countdownInterval)
+  }
+})
 
 </script>
 
 <template>
   <section>
     <div class="flex flex-col-reverse gap-10 md:flex-row px-4 lg:px-0 my-24 md:my-32 max-w-6xl mx-auto"> 
-          <div class="">
-              <h1 class="text-4xl md:text-6xl/[76px] font-semibold max-w-xl text-black">
+          <div class="text-left">
+              <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
                   Le Girofard
               </h1>
-              <p class="text-sm text-slate-600">
+              <p class="text-xl md:text-2xl font-semibold text-black pt-2">
                 Le Centre LGBTQIAP+ de Bordeaux.
               </p>
 
-              <p class="text-sm md:text-base mt-6 max-md:px-2 flex-2 text-slate-600 max-w-lg">
+              <p class="text-left text-md md:text-lg mt-8 text-black max-w-lg">
                 Le Girofard est le centre pour les personnes lesbiennes, gays, bi, trans intersexe, non binaire et leurs allié·es de Bordeaux. Il a pour objectif d’être un lieu d’accueil, d’écoute et de convivialité.</p>
-              <div class="flex items-center gap-4 mt-6">
+              <div class="flex items-center gap-4 mt-8">
                   <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-800 text-black active:scale-95 transition-all" type="button" href="https://www.helloasso.com/associations/girofard">
                       nous soutenir
                   </a>
@@ -73,19 +117,13 @@ const strapiPublicUrl = config.public.strapi.strapiPublicUrl || "http://localhos
             </div> -->
       </div>
     </section>
-    <!-- DEVELOPPEMENT -->
-    <section> 
-      <div class="text-center bg-[#A09FE3] py-32 flex flex-col md:items-center justify-center">
-        <h2 class="text-3xl font-semibold text-black mb-2">Le site est encore en développement</h2>
-        <p class="text-md md:text-base text-black px-2"><br />Pour toute demande, n'hésitez pas à nous contacter ou à passer au local !</p>
-      </div>
-    </section>
+    
     <!-- SERVICES -->
     <section>
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos services</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on propose ici ?</p>
-        <div class="grid mb-8 bg-neutral-primary-soft border border-default rounded-[10px] shadow-xs md:mb-12 md:grid-cols-4 grid-cols-2 pt-4">
+        <div class="grid mb-8 bg-neutral-primary-soft border border-default rounded-[10px] shadow-xs md:mb-12 md:grid-cols-4 grid-cols-2 pt-4 bg-[#F5FEF6]">
           <article v-for="item in serviceItems" :key="item.id" class="h-full">
             <figure class="flex flex-col h-full items-left px-4 py-8 md:p-8 text-left border-b border-default rounded-t-[10px] md:rounded-t-none md:rounded-d-[10px] md:border-e">
                   <blockquote class="max-w-2xl mx-auto text-body h-full flex flex-col">
@@ -121,6 +159,31 @@ const strapiPublicUrl = config.public.strapi.strapiPublicUrl || "http://localhos
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">L'agenda</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On se voit quand ?</p>
+        <div class="flex flex-row gap-4 overflow-x-auto md:overflow-x-visible">
+          <article v-for="item in upcomingEvents" :key="item.id" class="flex-shrink-0 w-80 md:w-auto md:flex-1 md:max-w-sm">
+            <div class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl h-full bg-[#F5FEF6]">
+              <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
+              <div class="ml-4">
+                <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
+                  {{ formatDateFrench(item.date) }}
+                </div>
+                <h3 class="text-lg text-zinc-900 mt-4 break-all font-semibold">{{item.name}}</h3>
+                <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
+                <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  {{ item.place }}
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="mt-6">
+          <NuxtLink to="/calendar" class="text-zinc-900 hover:underline underline font-semibold">Voir tous les événements</NuxtLink>
+        </div>
       </div>
     </section>
     <!-- PRIDE -->
@@ -128,41 +191,71 @@ const strapiPublicUrl = config.public.strapi.strapiPublicUrl || "http://localhos
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Pride</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Viens prendre la place dans la rue !</p>
+        <div class="rounded-[10px] border border-black/5 bg-[#F5FEF6] p-8 lg:p-12 shadow-sm">
+          <div class="grid gap-8 lg:grid-cols-[1.4fr_0.8fr] items-center">
+            <div>
+              <!-- <p class="text-sm uppercase tracking-[0.3em] text-zinc-900/80 mb-3">Pride</p> -->
+              <h2 class="text-3xl md:text-4xl font-semibold text-zinc-900 mb-4">On marche dans <span class="font-black text-[#0F172A]">{{ countdownLabel }}</span></h2>
+              <p class="text-base text-zinc-700 max-w-2xl">Cette année on fête les 30 ans des fiertés à Bordeaux, alors on fait tout notre possible pour que vous passiez un super moment :)</p>
+            </div>
+            <div class="flex flex-col gap-4">
+              <a
+                href="mailto:contact@le-girofard.org"
+                class="inline-flex items-left justify-center rounded-[10px] border border-zinc-900 bg-white px-6 py-4 text-base font-semibold text-zinc-900 transition hover:bg-zinc-100"
+              >
+                Devenir bénévole
+              </a>
+              <NuxtLink
+                :to="{ path: '/calendar', query: { category: 'Fiertés 2026' } }"
+                class="inline-flex items-left justify-center rounded-[10px] bg-zinc-900 px-6 py-4 text-base font-semibold text-white transition hover:bg-zinc-800"
+              >
+                Découvrir le programme des fiertés
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <!-- ACTUALITES -->
     <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16 hidden">
         <h2 class="text-base uppercase text-zinc-900">Actualités</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On est pas peu fier-e-s de ces actus</p>
       </div>
     </section>
     <!-- NEWSLETTER -->
     <section>
-      <div class="text-center bg-[#A09FE3] py-32 flex flex-col items-center justify-center">
+      <div class="text-center bg-[#A09FE3] py-32 flex flex-col items-center justify-center hidden">
         <h2 class="text-3xl font-semibold text-black mb-6">Tu veux recevoir nos p'tites news dans ta boite mail ?</h2>
         <p class="text-md md:text-base text-black mx-4"><br />Abonne-toi à notre newsletter !</p>
       </div>
     </section>
     <!-- FAQ -->
     <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16 hidden">
         <h2 class="text-base uppercase text-zinc-900">FAQ</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Des questions qu'on nous pose souvent</p>
       </div>
     </section>
     <!-- ASSOS -->
     <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16 hidden">
         <h2 class="text-base uppercase text-zinc-900">Nos assos adhérentes</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On est très bien entouré-es</p>
       </div>
     </section>
     <!-- PARTENAIRES -->
     <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16 hidden">
         <h2 class="text-base uppercase text-zinc-900">Nos partenaires</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On les remercie jamais assez</p>
+      </div>
+    </section>
+    <!-- DEVELOPPEMENT -->
+    <section> 
+      <div class="text-center bg-[#A09FE3] py-32 flex flex-col md:items-center justify-center">
+        <h2 class="text-4xl font-semibold text-black mb-2">Le site est encore en développement</h2>
+        <p class="text-lg md:text-xl text-black px-2"><br />Pour toute demande, n'hésitez pas à nous contacter ou à passer au local !</p>
       </div>
     </section>
 </template>
