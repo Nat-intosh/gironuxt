@@ -26,14 +26,14 @@
                 </svg>
             </button>
         </div>
-        <div class="mobile-menu absolute top-[96px] left-0 w-full bg-white p-6 hidden md:hidden">
-            <ul class="flex flex-col space-y-4 text-lg">
-                <li><a href="#" class="text-sm">Accueil</a></li>
-                <li><a href="#" class="text-sm">L'association</a></li>
-                <li><a href="#" class="text-sm">Nos services</a></li>
-                <li><a href="#" class="text-sm">Nos actions</a></li>
-                <li><a href="/calendar" class="text-sm">L'agenda</a></li>
-                <li><a href="#" class="text-sm">La FAQ</a></li>
+        <div class="mobile-menu fixed inset-x-0 top-[96px] bottom-0 z-20 bg-white p-6 md:hidden opacity-0 invisible pointer-events-none">
+            <ul class="flex flex-col space-y-4 text-lg text-black">
+                <li><a href="#" class="text-lg">Accueil</a></li>
+                <li><a href="#" class="text-lg">L'association</a></li>
+                <li><a href="#" class="text-lg">Nos services</a></li>
+                <li><a href="#" class="text-lg">Nos actions</a></li>
+                <li><a href="/calendar" class="text-lg">L'agenda</a></li>
+                <li><a href="#" class="text-lg">La FAQ</a></li>
             </ul>
 
             <button type="button" class="bg-white text-gray-600 border border-gray-300 mt-6 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full">
@@ -65,8 +65,21 @@ onMounted(() => {
 
   menuButtons.forEach((btn, index) => {
     btn.addEventListener('click', () => {
-      mobileMenus[index].classList.toggle('hidden')
+      mobileMenus[index].classList.toggle('open')
     })
   })
 })
+
 </script>
+
+<style scoped>
+.mobile-menu {
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.mobile-menu.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+</style>
