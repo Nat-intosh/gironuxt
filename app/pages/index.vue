@@ -190,7 +190,7 @@ onUnmounted(() => {
     <section>
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Pride</h2>
-        <p class="text-2xl font-semibold text-zinc-900 mb-6">Viens prendre la place dans la rue !</p>
+        <p class="text-2xl font-semibold text-zinc-900 mb-6 mr-32 lg:mr-0">Viens prendre la place dans la rue !</p>
         <div class="rounded-[10px] border border-black/5 bg-[#F5FEF6] p-8 lg:p-12 shadow-sm">
           <div class="grid gap-8 lg:grid-cols-[1.4fr_0.8fr] items-center">
             <div>
