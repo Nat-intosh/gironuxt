@@ -64,8 +64,16 @@ onMounted(() => {
   const mobileMenus = document.querySelectorAll('.mobile-menu')
 
   menuButtons.forEach((btn, index) => {
+    const mobileMenu = mobileMenus[index]
+
     btn.addEventListener('click', () => {
-      mobileMenus[index].classList.toggle('open')
+      mobileMenu.classList.toggle('open')
+    })
+
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.remove('open')
+      })
     })
   })
 })
