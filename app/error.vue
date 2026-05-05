@@ -9,9 +9,10 @@ const props = defineProps<{ error?: { statusCode?: number; message?: string } }>
     <NotFoundPage v-if="props.error?.statusCode === 404" />
     <div v-else class="min-h-screen flex items-center justify-center p-8 bg-slate-50 text-slate-900">
       <div class="max-w-xl text-center">
-        <h1 class="text-5xl font-bold mb-4">Erreur blip blap bloup</h1>
+        <h1 class="text-5xl font-bold mb-4">Oops, une petite erreur est survenue</h1>
+        <p class="text-xl font-semibold mb-6">On s'en occupe vite, promis</p>
         <p class="text-lg mb-6">{{ props.error?.statusCode || 'Erreur' }} - {{ props.error?.message || 'Une erreur est survenue.' }}</p>
-        <nuxt-link to="/" class="inline-flex items-center justify-center rounded-full bg-indigo-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-indigo-500">
+        <nuxt-link to="/" class="inline-flex items-center justify-center rounded-[10px] bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-green-800">
           Retour à l'accueil
         </nuxt-link>
       </div>
