@@ -57,7 +57,6 @@
 </template>
 
 <script setup>
-import { nuxtCtx } from 'nuxt/kit'
 import { onMounted } from 'vue'
 
 onMounted(() => {
