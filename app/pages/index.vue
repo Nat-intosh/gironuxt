@@ -167,9 +167,9 @@ onUnmounted(() => {
                 <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                   {{ formatDateFrench(item.date) }}
                 </div>
-                <h3 class="text-lg text-zinc-900 mt-4 break-all font-semibold">{{item.name}}</h3>
+                <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.name}}</h3>
                 <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
-                <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                <p class="pt-4 text-base text-zinc-600 break-normal whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
                 <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -191,7 +191,7 @@ onUnmounted(() => {
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Pride</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6 mr-32 lg:mr-0">Viens prendre la place dans la rue !</p>
-        <div class="rounded-[10px] border border-black/5 bg-[#F5FEF6] p-8 lg:p-12 shadow-sm">
+        <div class="rounded-[10px] border border-black/5 bg-[#F5FEF6] p-8 lg:p-12">
           <div class="grid gap-8 lg:grid-cols-[1.4fr_0.8fr] items-center">
             <div>
               <!-- <p class="text-sm uppercase tracking-[0.3em] text-zinc-900/80 mb-3">Pride</p> -->
