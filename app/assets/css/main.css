@@ -14,3 +14,24 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
   }
 }
+
+.degragay {
+    position: relative;
+    background-color: hsla(55, 93%, 77%, 0.08);
+    overflow:hidden;
+}
+
+/* .degragay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10px;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 1.992544515727985% 92.38559218838299%, hsla(194, 66%, 69%, 0.7  ) 2%, transparent 20%), radial-gradient(circle at 20.934244807541482% 97.34624011942209%, hsla(274, 64%, 65%, 0.5) 1%, transparent 19%), radial-gradient(circle at 29.142990076693838% 88.50938147523166%, hsla(337, 80%, 80%, 0.82) 1%, transparent 24%), radial-gradient(circle at 56.41128000538392% 86.23449786684343%, hsla(87, 48%, 59%, 0.69) 1%, transparent 28%), radial-gradient(circle at 50.33741934001621% 69.8024298202127%, hsla(50, 50%, 60%, 0.69) 1%, transparent 18%), radial-gradient(circle at 72.07889211006832% 87.98423797089639%, hsla(31, 85%, 50%, 0.49) 1%, transparent 10%), radial-gradient(circle at 90.97513754855204% 92.84571638672517%, hsla(3, 100%, 66%, 0.61) 1%, transparent 30%);
+    background-blend-mode: overlay, overlay, overlay, overlay, overlay, overlay, overlay;
+    /* background-size:10vw; 
+    filter: blur(10vw);
+    z-index: -1;
+    clip: auto;
+} */

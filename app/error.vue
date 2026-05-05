@@ -17,4 +17,5 @@ const props = defineProps<{ error?: { statusCode?: number; message?: string } }>
       </div>
     </div>
   </div>
+  <Footer />
 </template>

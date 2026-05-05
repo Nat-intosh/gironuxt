@@ -89,32 +89,34 @@ onUnmounted(() => {
 
 <template>
   <section>
-    <div class="flex flex-col-reverse gap-10 md:flex-row px-4 lg:px-0 my-24 md:my-32 max-w-6xl mx-auto"> 
-          <div class="text-left">
-              <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
-                  Le Girofard
-              </h1>
-              <p class="text-xl md:text-2xl font-semibold text-black pt-2">
-                Le Centre LGBTQIAP+ de Bordeaux.
-              </p>
+    <div class="py-32 md:py-48 bg-[url(~/assets/img/hero-bg.png)] degragay bg-no-repeat bg-cover mask-clip-content">
+      <div class="flex flex-col-reverse gap-10 md:flex-row px-4 lg:px-0 max-w-6xl mx-auto"> 
+            <div class="text-left">
+                <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
+                    Le Girofard
+                </h1>
+                <p class="text-xl md:text-2xl font-semibold text-black pt-2">
+                  Le Centre LGBTQIAP+ de Bordeaux.
+                </p>
 
-              <p class="text-left text-md md:text-lg mt-8 text-black max-w-lg">
-                Le Girofard est le centre pour les personnes lesbiennes, gays, bi·es, trans, intersexes, non binaires et leurs allié·es de Bordeaux. Il a pour objectif d’être un lieu d’accueil, d’écoute et de convivialité.</p>
-              <div class="flex items-center gap-4 mt-8">
-                  <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-800 text-black active:scale-95 transition-all" type="button" href="https://www.helloasso.com/associations/girofard">
-                      nous soutenir
-                  </a>
-                  <a class="px-5 py-3 rounded-[10px] bg-[#78E0AF] text-black font-semibold flex items-center gap-2 hover:bg-indigo-600/5 active:scale-95 transition-all" type="button" href="mailto:contact@le-girofard.org">
-                      <span>nous contacter</span>
-                  </a>
-              </div>
-          </div>
-          <!-- <div class="w-full md:max-w-xs lg:max-w-lg">
-            <img class="w-full h-auto" src="https://congres.bordeaux-tourisme.com/sites/bcb/files/styles/large/public/medias/widgets/misc/Drag%20Bingo%20.jpg.webp" alt="">
-          </div> -->
+                <p class="text-left text-md md:text-lg mt-8 text-black max-w-lg">
+                  Le Girofard est le centre pour les personnes lesbiennes, gays, bi·es, trans, intersexes, non binaires et leurs allié·es de Bordeaux. Il a pour objectif d’être un lieu d’accueil, d’écoute et de convivialité.</p>
+                <div class="flex items-center gap-4 mt-8">
+                    <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-800 text-black active:scale-95 transition-all" type="button" href="https://www.helloasso.com/associations/girofard">
+                        nous soutenir
+                    </a>
+                    <a class="px-5 py-3 rounded-[10px] bg-[#78E0AF] text-black font-semibold flex items-center gap-2 hover:bg-indigo-600/5 active:scale-95 transition-all" type="button" href="mailto:contact@le-girofard.org">
+                        <span>nous contacter</span>
+                    </a>
+                </div>
+            </div>
             <!-- <div class="w-full md:max-w-xs lg:max-w-lg">
-                <img class="w-full h-auto" src="https://congres.bordeaux-tourisme.com/sites/bcb/files/styles/large/public/medias/widgets/misc/Drag%20Bingo%20.jpg.webp" alt="">
+              <img class="w-full h-auto" src="https://congres.bordeaux-tourisme.com/sites/bcb/files/styles/large/public/medias/widgets/misc/Drag%20Bingo%20.jpg.webp" alt="">
             </div> -->
+              <!-- <div class="w-full md:max-w-xs lg:max-w-lg">
+                  <img class="w-full h-auto" src="https://congres.bordeaux-tourisme.com/sites/bcb/files/styles/large/public/medias/widgets/misc/Drag%20Bingo%20.jpg.webp" alt="">
+              </div> -->
+        </div>
       </div>
     </section>
     
@@ -125,7 +127,7 @@ onUnmounted(() => {
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on propose ici ?</p>
         <div class="grid mb-8 bg-neutral-primary-soft border border-default rounded-[10px] shadow-xs md:mb-12 md:grid-cols-4 grid-cols-2 pt-4 bg-[#F5FEF6]">
           <article v-for="item in serviceItems" :key="item.id" class="h-full">
-            <figure class="flex flex-col h-full items-left px-4 py-8 md:p-8 text-left border-b border-default rounded-t-[10px] md:rounded-t-none md:rounded-d-[10px] md:border-e">
+            <figure class="flex flex-col h-full items-left px-4 py-8 md:p-8 text-left border-b border-default rounded-t-[10px] md:rounded-t-none md:rounded-d-[10px] border-e">
                   <blockquote class="max-w-2xl mx-auto text-body h-full flex flex-col">
                       <h3 class="text-lg font-semibold text-heading">{{item.name}}</h3>
                       <p class="my-4 flex-1">{{item.short_description}}</p>
@@ -141,7 +143,7 @@ onUnmounted(() => {
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos actions</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on fait ?</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <article v-for="item in actionsItems" :key="item.id" class="h-full">
             <div class="flex items-stretch md:gap-4 h-full rounded-[10px] py-4 overflow-hidden">
               <img class="object-cover w-1/4 md:w-1/5 h-full rounded-[10px]" :src="getImageUrl(item)" alt="">
@@ -161,7 +163,7 @@ onUnmounted(() => {
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On se voit quand ?</p>
         <div class="flex flex-row gap-4 overflow-x-auto md:overflow-x-visible">
           <article v-for="item in upcomingEvents" :key="item.id" class="flex-shrink-0 w-80 md:w-auto md:flex-1 md:max-w-sm">
-            <div class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl h-full bg-[#F5FEF6]">
+            <div class="flex  p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl h-full bg-[#F5FEF6]">
               <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
               <div class="ml-4">
                 <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
