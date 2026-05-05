@@ -4,20 +4,24 @@ import { formatDateFrench } from '~/utils/formatDate'
 
 const { findOne, find } = useStrapi()
 const config = useRuntimeConfig()
+const nuxtApp = useNuxtApp()
 
 const { data: events } = await useAsyncData(
   'events',
-  () => find('events', { populate: ['cover', 'event_category'] })
+  () => find('events', { populate: ['cover', 'event_category'] }),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
 )
 
 const { data: services } = await useAsyncData(
   'services',
-  () => find('services')
+  () => find('services'),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
 )
 
 const { data: actions } = await useAsyncData(
   'actions',
-  () => find('actions', { populate: ['image'] })
+  () => find('actions', { populate: ['image'] }),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
 )
 
 const getImageUrl = (item: any) => {

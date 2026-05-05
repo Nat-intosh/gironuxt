@@ -4,10 +4,12 @@ import { formatDateFrench } from '~/utils/formatDate'
 
 const { findOne, find } = useStrapi()
 const config = useRuntimeConfig()
+const nuxtApp = useNuxtApp()
 
 const { data: events } = await useAsyncData(
   'events',
-  () => find('events', { populate: ['cover', 'event_category'] })
+  () => find('events', { populate: ['cover', 'event_category'] }),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
 )
 
 const strapiUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
