@@ -1,3 +1,17 @@
+<script setup lang="ts">
+
+
+useSeoMeta
+({
+  title: 'Le Girofard - Centre LGBTQIAP+ de Bordeaux',
+  ogTitle: 'Le Girofard - Centre LGBTQIAP+ de Bordeaux',
+  description: 'Le Centre LGBTQIAP+ de Bordeaux. Centre pour les personnes lesbiennes, gays, bi·es, trans, intersexes, non binaires et leurs allié·es de Bordeaux.',
+  ogDescription: 'Le Centre LGBTQIAP+ de Bordeaux. Centre pour les personnes lesbiennes, gays, bi·es, trans, intersexes, non binaires et leurs allié·es de Bordeaux.',
+  ogImage: '~/assets/logo.png',
+})
+
+</script>
+
 <template>
   <div>
     <NuxtRouteAnnouncer />
