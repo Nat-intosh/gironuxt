@@ -13,7 +13,7 @@
                 Retourner à l'accueil
               </NuxtLink>
     <img class="mt-12 h-[300px]lg:h-[540px]" src="https://admin.le-girofard.org/uploads/medium_Marche_inla_ae2fb2bee2.jpg" alt="Une illustration sur la marche de stonewall" />
-    <p class="pt-2 mb-8"> Illustration : <a href="https://www.instagram.com/inlassablee_/" class="hover:underline" target="blank">Inlassablee</a></p>
+    <p class="pt-2 mb-8"> Illustration : <a href="https://www.instagram.com/inlassablee_/" class="underline" target="blank">Inlassablee</a></p>
     <slot />
   </div>
 </template>

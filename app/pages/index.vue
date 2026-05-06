@@ -24,10 +24,18 @@ const { data: actions } = await useAsyncData(
   { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
 )
 
+const { data: global } = await useAsyncData(
+  'global',
+  () => find('global', { populate: ['defaultSeo', 'favicon', 'pride_banner'] }),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
+)
+
 const getImageUrl = (item: any) => {
   const path = item.cover?.formats?.small?.url 
     || item.cover?.formats?.thumbnail?.url 
     || item.cover?.url
+    || item.pride_banner?.formats?.large?.url
+    || item.pride_banner?.url
     || item.image?.formats?.small?.url
     || item.image?.formats?.thumbnail?.url
     || item.image?.url
@@ -55,9 +63,9 @@ const upcomingEvents = computed(() => {
 const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
 
-const targetPrideDate = new Date('2026-05-30T13:00:00')
+const targetPrideDate = computed(() => new Date(global.value?.data?.pride_date))
 const countdownLabel = ref('')
-let countdownInterval: number | undefined
+let countdownInterval: ReturnType<typeof setInterval> | undefined
 
 const formatCountdown = (ms: number) => {
   const totalSeconds = Math.max(0, Math.floor(ms / 1000))
@@ -71,10 +79,10 @@ const formatCountdown = (ms: number) => {
 
 const updateCountdown = () => {
   const now = new Date()
-  const diff = targetPrideDate.getTime() - now.getTime()
+  const diff = targetPrideDate.value.getTime() - now.getTime()
 
   countdownLabel.value = diff <= 0
-    ? 'C’est parti !'
+    ? 'quelques temps'
     : formatCountdown(diff)
 }
 
@@ -198,6 +206,7 @@ onUnmounted(() => {
         <h2 class="text-base uppercase text-zinc-900">Pride</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6 mr-32 lg:mr-0">Viens prendre la place dans la rue !</p>
         <div class="rounded-[10px] border border-black/5 bg-[#F5FEF6] p-8 lg:p-12">
+          <img v-if="global?.data" :src="getImageUrl(global?.data)" alt="Pride banner" class="w-full rounded-[10px] border border-black/5 object-cover mb-8" />
           <div class="grid gap-8 lg:grid-cols-[1.4fr_0.8fr] items-center">
             <div>
               <!-- <p class="text-sm uppercase tracking-[0.3em] text-zinc-900/80 mb-3">Pride</p> -->
