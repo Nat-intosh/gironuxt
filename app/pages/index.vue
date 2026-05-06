@@ -114,7 +114,7 @@ onUnmounted(() => {
                 <p class="text-left text-md md:text-lg mt-8 text-black max-w-lg">
                   Le Girofard est le centre pour les personnes lesbiennes, gays, bi·es, trans, intersexes, non binaires et leurs allié·es de Bordeaux. Il a pour objectif d’être un lieu d’accueil, d’écoute et de convivialité.</p>
                 <div class="flex items-center gap-4 mt-8">
-                    <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-800 text-black active:scale-95 transition-all" type="button" href="https://www.helloasso.com/associations/girofard">
+                    <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-200 text-black active:scale-95 transition-all" type="button" href="https://www.helloasso.com/associations/girofard">
                         nous soutenir
                     </a>
                     <a class="px-5 py-3 rounded-[10px] bg-[#78E0AF] text-black font-semibold flex items-center gap-2 hover:bg-indigo-600/5 active:scale-95 transition-all" type="button" href="mailto:contact@le-girofard.org">
@@ -205,7 +205,7 @@ onUnmounted(() => {
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Pride</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6 mr-32 lg:mr-0">Viens prendre la place dans la rue !</p>
-        <div class="rounded-[10px] border border-black/5 bg-[#F5FEF6] p-8 lg:p-12">
+        <div class="rounded-[10px] border border-black/5 bg-[#F5FEF6] p-6 lg:p-6">
           <img v-if="global?.data" :src="getImageUrl(global?.data)" alt="Pride banner" class="w-full rounded-[10px] border border-black/5 object-cover mb-8" />
           <div class="grid gap-8 lg:grid-cols-[1.4fr_0.8fr] items-center">
             <div>
@@ -240,9 +240,18 @@ onUnmounted(() => {
     </section>
     <!-- NEWSLETTER -->
     <section>
-      <div class="text-center bg-[#A09FE3] py-32 flex flex-col items-center justify-center hidden">
-        <h2 class="text-3xl font-semibold text-black mb-6">Tu veux recevoir nos p'tites news dans ta boite mail ?</h2>
-        <p class="text-md md:text-base text-black mx-4"><br />Abonne-toi à notre newsletter !</p>
+      <div class="bg-[#f4a3a7] py-16 px-4 lg:px-0 mb-16 hidden">
+        <div class="w-full max-w-6xl mx-auto">
+          <h2 class="text-base uppercase text-zinc-900">Newsletter</h2>
+          <p class="text-2xl font-semibold text-black mb-6">Tu veux recevoir nos p'tites news dans ta boite mail ?</p>
+          <p class="text-base text-black max-w-2xl mb-6">On t'enverra pas de spam, juste des infos sur nos événements, nos actions et tout ce qui se passe au Girofard !</p>
+          <a
+                href="mailto:contact@le-girofard.org"
+                class="inline-flex items-left justify-center rounded-[10px] border border-zinc-900 bg-white px-6 py-4 text-base font-semibold text-zinc-900 transition hover:bg-zinc-100"
+              >
+                S'abonner à la newsletter
+              </a>
+        </div>
       </div>
     </section>
     <!-- FAQ -->
