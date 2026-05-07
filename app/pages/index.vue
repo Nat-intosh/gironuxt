@@ -367,13 +367,13 @@ const subscribeToNewsletter = async () => {
     </section>
     <!-- AUTRES COLLECTIFS -->
     <section>
-      <div v-if="collectifsItems.length > 0" class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos collectifs</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Retrouvez les aussi au Girofard !</p>
         <div class="flex flex-row gap-6 overflow-x-scroll ">
           <article v-for="item in collectifsItems" :key="item.id" class="flex-shrink-0 w-[256px]">
             <div class="transition-all duration-200 rounded-xl">
-                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="max-w-[128px] h-full border border-black/10 rounded-full object-cover aspect-1/1" />
+                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="max-w-[128px] h-full border border-black/10 rounded-full object-cover aspect-square" />
                 <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.Name}}</h3>
                 <p class="pt-4 text-base text-zinc-600 break-normal whitespace-normal line-clamp-4">{{item.Short_description}}</p>
             </div>
