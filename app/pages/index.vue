@@ -55,7 +55,7 @@ const getImageUrl = (item: any) => {
     || item.cover?.url
     || item.pride_banner?.formats?.large?.url
     || item.pride_banner?.url
-    || item.Image?.formats?.small?.url
+    || item.Image?.formats?.thumbnail?.url
     || item.image?.formats?.small?.url
     || item.image?.formats?.thumbnail?.url
     || item.image?.url
@@ -373,7 +373,7 @@ const subscribeToNewsletter = async () => {
         <div class="flex flex-row gap-6 overflow-x-scroll ">
           <article v-for="item in collectifsItems" :key="item.id" class="flex-shrink-0 w-[256px]">
             <div class="transition-all duration-200 rounded-xl">
-                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="max-w-[128px] border border-black/10 rounded-full object-cover aspect-square" />
+                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="w-[128px] border border-black/10 rounded-full object-cover aspect-square" />
                 <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.Name}}</h3>
                 <p class="pt-4 text-base text-zinc-600 break-normal whitespace-normal line-clamp-4">{{item.Short_description}}</p>
             </div>
@@ -389,7 +389,7 @@ const subscribeToNewsletter = async () => {
         <div class="flex flex-row gap-6 overflow-x-scroll ">
           <article v-for="item in assoAdherentesItems" :key="item.id" class="flex-shrink-0 w-[256px]">
             <div class="transition-all duration-200 rounded-xl">
-                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="max-w-[128px] h-full border border-black/10 rounded-full object-cover aspect-1/1" />
+                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="w-[128px] border border-black/10 rounded-full object-cover aspect-square" />
                 <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.Name}}</h3>
                 <p class="pt-4 text-base text-zinc-600 break-normal whitespace-normal line-clamp-4">{{item.Short_description}}</p>
             </div>
@@ -405,7 +405,7 @@ const subscribeToNewsletter = async () => {
         <div class="flex flex-row gap-6 overflow-x-scroll ">
           <article v-for="item in partenairesItems" :key="item.id" class="flex-shrink-0 w-[256px]">
             <div class="transition-all duration-200 rounded-xl">
-                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="max-w-[128px] h-full border border-black/10 rounded-full object-cover aspect-1/1" />
+                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="w-[128px] border border-black/10 rounded-full object-cover aspect-square" />
                 <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.Name}}</h3>
                 <p class="pt-4 text-base text-zinc-600 break-normal whitespace-normal line-clamp-4">{{item.Short_description}}</p>
             </div>
