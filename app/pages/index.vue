@@ -101,7 +101,7 @@ onUnmounted(() => {
 
 <template>
   <section>
-    <div class="py-32 md:py-48 bg-[url(~/assets/img/hero-bg.png)] degragay bg-no-repeat bg-cover mask-clip-content">
+    <div class="py-32 md:py-48 bg-[url(~/assets/img/hero-bg.webp)] degragay bg-no-repeat bg-cover mask-clip-content">
       <div class="flex flex-col-reverse gap-10 md:flex-row px-4 lg:px-0 max-w-6xl mx-auto"> 
             <div class="text-left">
                 <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
