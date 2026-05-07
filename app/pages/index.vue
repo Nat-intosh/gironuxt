@@ -30,12 +30,26 @@ const { data: global } = await useAsyncData(
   { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
 )
 
+const { data: assoAdherentes } = await useAsyncData(
+  'assoAdherentes',
+  () => find('asso-adherentes', { populate: ['Image'] }),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
+)
+
+const { data: partenaires } = await useAsyncData(
+  'partenaires',
+  () => find('partenaires', { populate: ['Image'] }),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
+)
+
+
 const getImageUrl = (item: any) => {
   const path = item.cover?.formats?.small?.url 
     || item.cover?.formats?.thumbnail?.url 
     || item.cover?.url
     || item.pride_banner?.formats?.large?.url
     || item.pride_banner?.url
+    || item.Image?.formats?.small?.url
     || item.image?.formats?.small?.url
     || item.image?.formats?.thumbnail?.url
     || item.image?.url
@@ -49,6 +63,8 @@ const getImageUrl = (item: any) => {
 
 const serviceItems = computed(() => (services.value?.data as any[]) || [])
 const actionsItems = computed(() => (actions.value?.data as any[]) || [])
+const partenairesItems = computed(() => (partenaires.value?.data as any[]) || [])
+const assoAdherentesItems = computed(() => (assoAdherentes.value?.data as any[]) || [])
 
 const upcomingEvents = computed(() => {
   if (!events.value?.data) return []
@@ -96,6 +112,65 @@ onUnmounted(() => {
     clearInterval(countdownInterval)
   }
 })
+
+//API CLE
+const MAILERLITE_API_KEY = config.public.mailerlite.apiKey;
+
+// State variables for user feedback
+const isLoading = ref(false);
+const apiError = ref(null);
+const apiSuccess = ref(null);
+
+/**
+ * Handles the form submission logic.
+ */
+const subscribeToNewsletter = async () => {
+  // 1. Get the input element and its value
+  const emailInput = document.getElementById('input-group-1');
+  const email = emailInput.value.trim();
+
+  if (!email) {
+    apiError.value = 'Please enter an email address.';
+    return;
+  }
+
+  // 2. Set loading state and clear previous messages
+  isLoading.value = true;
+  apiError.value = null;
+  apiSuccess.value = null;
+
+  try {
+    const response = await fetch('https://connect.mailerlite.com/api/subscribers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Use the Bearer token standard for authorization
+        'Authorization': `Bearer ${MAILERLITE_API_KEY}`,
+      },
+      body: JSON.stringify({
+        email: email,
+      }),
+    });
+
+    if (!response.ok) {
+      // Handle API specific errors (e.g., invalid email format)
+      const errorData = await response.json();
+      console.error("API Error Details:", errorData);
+      apiError.value = `Une erreur s'est produite (Status: ${response.status})`;
+    } else {
+      // Success!
+      apiSuccess.value = "On t'a ajouté à la newsletter ! Merci de ton soutien 💜";
+      // Clear input field on success
+      (emailInput).value = ''; 
+    }
+  } catch (e) {
+    // Handle network errors (e.g., no internet connection)
+    apiError.value = 'Une erreur réseau s\'est produite. Veuillez vérifier votre connexion internet.';
+  } finally {
+    // 3. Reset loading state regardless of success or failure
+    isLoading.value = false;
+  }
+};
 
 </script>
 
@@ -240,18 +315,40 @@ onUnmounted(() => {
     </section>
     <!-- NEWSLETTER -->
     <section>
-      <div class="bg-[#f4a3a7] py-16 px-4 lg:px-0 mb-16 hidden">
+      <div class="bg-[#f4a3a7] py-16 px-4 lg:px-0 mb-16">
         <div class="w-full max-w-6xl mx-auto">
           <h2 class="text-base uppercase text-zinc-900">Newsletter</h2>
           <p class="text-2xl font-semibold text-black mb-6">Tu veux recevoir nos p'tites news dans ta boite mail ?</p>
           <p class="text-base text-black max-w-2xl mb-6">On t'enverra pas de spam, juste des infos sur nos événements, nos actions et tout ce qui se passe au Girofard !</p>
-          <a
-                href="mailto:contact@le-girofard.org"
-                class="inline-flex items-left justify-center rounded-[10px] border border-zinc-900 bg-white px-6 py-4 text-base font-semibold text-zinc-900 transition hover:bg-zinc-100"
+          <div class="flex flex-col md:flex-row gap-4">
+          <!-- Input Field -->
+            <div class="flex-grow">
+              <input 
+                  type="text" 
+                  id="input-group-1" 
+                  v-model="emailInputLocal" 
+                  class="block w-full px-4 py-4 bg-neutral-secondary-medium rounded-[10px] border border-zinc-900 text-heading text-base rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body" 
+                  placeholder="giradresse@mail.com"
               >
-                S'abonner à la newsletter
-              </a>
+            </div>
+            
+            <!-- The clickable button (REPLACING THE <a> TAG) -->
+            <button
+              @click="subscribeToNewsletter"
+              :disabled="isLoading"
+              class="inline-flex items-center flex-shrink-0 justify-center rounded-[10px] border border-zinc-900 bg-white px-6 py-4 text-base font-semibold text-zinc-900 transition hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span v-if="isLoading">Envoi...</span>
+              <span v-else>s'abonner à la newsletter</span>
+            </button>
+            </div>
+          
+
+            <div v-if="apiError" class="text-red-500 mt-3 text-sm">{{ apiError }}</div>
+            <div v-if="apiSuccess" class="text-green-600 mt-3 text-sm">{{ apiSuccess }}</div>
         </div>
+
+        <!-- Display Feedback Messages -->
       </div>
     </section>
     <!-- FAQ -->
@@ -263,16 +360,34 @@ onUnmounted(() => {
     </section>
     <!-- ASSOS -->
     <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16 hidden">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos assos adhérentes</h2>
-        <p class="text-2xl font-semibold text-zinc-900 mb-6">On est très bien entouré-es</p>
+        <p class="text-2xl font-semibold text-zinc-900 mb-6">On est très bien entouré∙es</p>
+        <div class="flex flex-row gap-6 overflow-x-scroll ">
+          <article v-for="item in assoAdherentesItems" :key="item.id" class="flex-shrink-0 w-[256px]">
+            <div class="transition-all duration-200 rounded-xl">
+                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="max-w-[128px] h-full border border-black/10 rounded-full object-cover aspect-1/1" />
+                <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.Name}}</h3>
+                <p class="pt-4 text-base text-zinc-600 break-normal whitespace-normal line-clamp-4">{{item.Short_description}}</p>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
     <!-- PARTENAIRES -->
     <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16 hidden">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos partenaires</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On les remercie jamais assez</p>
+        <div class="flex flex-row gap-6 overflow-x-scroll ">
+          <article v-for="item in partenairesItems" :key="item.id" class="flex-shrink-0 w-[256px]">
+            <div class="transition-all duration-200 rounded-xl">
+                <img v-if="item.Image" :src="getImageUrl(item)" alt="Event cover" class="max-w-[128px] h-full border border-black/10 rounded-full object-cover aspect-1/1" />
+                <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.Name}}</h3>
+                <p class="pt-4 text-base text-zinc-600 break-normal whitespace-normal line-clamp-4">{{item.Short_description}}</p>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
     <!-- DEVELOPPEMENT -->

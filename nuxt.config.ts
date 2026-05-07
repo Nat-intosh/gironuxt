@@ -9,6 +9,9 @@ export default defineNuxtConfig({
       strapi: {
         strapiPublicUrl: process.env.NUXT_PUBLIC_STRAPI_PUBLIC_URL || 'http://82.165.108.153:1337' || 'http://localhost:1337',
         url: process.env.NUXT_PUBLIC_STRAPI_URL || 'http://localhost:1337'
+      },
+      mailerlite: {
+        apiKey: process.env.NUXT_PUBLIC_MAILERLITE_API_KEY || "acab"
       }
     }
   },

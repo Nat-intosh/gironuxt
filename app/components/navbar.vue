@@ -8,11 +8,12 @@
             </a>
 
             <ul class="md:flex hidden items-center gap-10">
-                <li><nuxt-link to="/" class="hover:text-gray-500/80 transition">Accueil</nuxt-link></li>
-                <li><nuxt-link to="/association" class="hover:text-gray-500/80 transition">L'association</nuxt-link></li>
+                <!-- <li><nuxt-link to="/" class="hover:text-gray-500/80 transition">Accueil</nuxt-link></li> -->
+                <!-- <li><nuxt-link to="/association" class="hover:text-gray-500/80 transition">L'association</nuxt-link></li> -->
                 <li><nuxt-link to="/services" class="hover:text-gray-500/80 transition">Nos services</nuxt-link></li>
                 <li><nuxt-link to="/actions" class="hover:text-gray-500/80 transition">Nos actions</nuxt-link></li>
                 <li><nuxt-link to="/calendar" class="hover:text-gray-500/80 transition">L'agenda</nuxt-link></li>
+                <li><nuxt-link to="/blog" class="hover:text-gray-500/80 transition">Le Blog</nuxt-link></li>
                 <li><nuxt-link to="/faq" class="hover:text-gray-500/80 transition">La FAQ</nuxt-link></li>
             </ul>
 
@@ -26,17 +27,18 @@
                 </svg>
             </button>
         </div>
-        <div class="mobile-menu fixed inset-x-0 top-[96px] bottom-0 z-20 bg-white p-6 md:hidden opacity-0 invisible pointer-events-none">
-            <ul class="flex flex-col space-y-4 text-lg text-black">
-                <li><nuxt-link to="/" class="text-lg">Accueil</nuxt-link></li>
-                <li><nuxt-link to="/association" class="text-lg">L'association</nuxt-link></li>
-                <li><nuxt-link to="/services" class="text-lg">Nos services</nuxt-link></li>
-                <li><nuxt-link to="/actions" class="text-lg">Nos actions</nuxt-link></li>
-                <li><nuxt-link to="/calendar" class="text-lg">L'agenda</nuxt-link></li>
-                <li><nuxt-link to="/faq" class="text-lg">La FAQ</nuxt-link></li>
+        <div class="mobile-menu fixed inset-x-0 top-[96px] bottom-0 z-20 bg-white px-6 pt-16 md:hidden opacity-0 invisible pointer-events-none touch-none">
+            <ul class="flex flex-col space-y-8 text-xl text-black">
+                <!-- <li><nuxt-link to="/" class="text-xl">Accueil</nuxt-link></li> -->
+                <!-- <li><nuxt-link to="/association" class="text-xl">L'association</nuxt-link></li> -->
+                <li><nuxt-link to="/services" class="text-3xl font-semibold">Nos services</nuxt-link></li>
+                <li><nuxt-link to="/actions" class="text-3xl font-semibold">Nos actions</nuxt-link></li>
+                <li><nuxt-link to="/calendar" class="text-3xl font-semibold">L'agenda</nuxt-link></li>
+                <li><nuxt-link to="/blog" class="text-3xl font-semibold">Le Blog</nuxt-link></li>
+                <li><nuxt-link to="/faq" class="text-3xl font-semibold">La FAQ</nuxt-link></li>
             </ul>
 
-            <button type="button" class="bg-white text-gray-600 border border-gray-300 mt-6 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full">
+            <button type="button" class="bg-white text-gray-600 border border-gray-300 mt-16 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full">
                 Nous soutenir
             </button>
         </div>
