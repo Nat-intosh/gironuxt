@@ -76,11 +76,32 @@ const collectifsItems = computed(() => (collectifs.value?.data as any[]) || [])
 const upcomingEvents = computed(() => {
   if (!events.value?.data) return []
   
-  const now = new Date()
-  return (events.value.data as any[])
-    .filter((event: any) => new Date(event.date) >= now)
+
+// Helper: does an event overlap a given time window?
+const eventOverlaps = (event: any, windowStart: Date, windowEnd: Date) => {
+  const start = new Date(event.date)
+  start.setHours(0, 0, 0, 0)
+  const end = event.end_date ? new Date(event.end_date) : new Date(event.date)
+  end.setHours(23, 59, 59, 999) // include full last day
+  return start <= windowEnd && end >= windowStart
+}
+
+const today = () => {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  return d
+}
+
+ const now = today()
+  return events.value.data
+    .filter((event: any) => {
+      // Use end_date if available, otherwise fall back to date
+      const endStr = event.end_date || event.date
+      const end = new Date(endStr)
+      end.setHours(23, 59, 59, 999) // include the full last day
+      return end >= now
+    })
     .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    .slice(0, 4)
 })
 
 const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
