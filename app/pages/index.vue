@@ -102,6 +102,7 @@ const today = () => {
       return end >= now
     })
     .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(0, 4)
 })
 
 const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
