@@ -275,7 +275,7 @@ const toggleCategory = (category: string) => {
                   <p v-if="selectedEvent?.longdescription" class="text-zinc-700 leading-relaxed whitespace-pre-wrap text-sm">
                     {{ selectedEvent.longdescription }}
                   </p>
-                  <p v-else-if="selectedEvent?.shortdescription" class="text-zinc-700 leading-relaxed text-sm">
+                  <p v-else-if="selectedEvent?.shortdescription" class="text-zinc-700 leading-relaxed whitespace-pre-wrap text-sm">
                     {{ selectedEvent.shortdescription }}
                   </p>
                   
