@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { formatDateFrench } from '~/utils/formatDate'
+import { formatDateFrench, formatDateRangeFrench } from '~/utils/formatDate'
 
 const { findOne, find } = useStrapi()
 const config = useRuntimeConfig()
@@ -261,7 +261,7 @@ const subscribeToNewsletter = async () => {
               <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
               <div class="ml-4">
                 <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
-                  {{ formatDateFrench(item.date) }}
+                  {{ formatDateRangeFrench(item.date, item.end_date) }}
                 </div>
                 <h3 class="text-lg text-zinc-900 mt-4 break-normal font-semibold">{{item.name}}</h3>
                 <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>

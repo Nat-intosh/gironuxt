@@ -25,3 +25,26 @@ export function formatDateFrench(date: string | Date): string {
   
   return `${dayName.charAt(0).toUpperCase() + dayName.slice(1)} ${dayNum} ${monthName} à ${timeString}`
 }
+
+
+export function formatDateRangeFrench(startDate: string | Date, endDate?: string | Date | null): string {
+  if (!endDate) return formatDateFrench(startDate)
+
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+
+  const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']
+
+  const startDay = start.getDate()
+  const startMonth = months[start.getMonth()]
+  const endDay = end.getDate()
+  const endMonth = months[end.getMonth()]
+
+  // Same month: "du 2 au 5 avril"
+  if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+    return `du ${startDay} au ${endDay} ${endMonth}`
+  }
+
+  // Different months: "du 2 avril au 5 mai"
+  return `Du ${startDay} ${startMonth} au ${endDay} ${endMonth}`
+}

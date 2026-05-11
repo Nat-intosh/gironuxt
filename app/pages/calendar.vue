@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { formatDateFrench } from '~/utils/formatDate'
+import { formatDateFrench, formatDateRangeFrench } from '~/utils/formatDate'
 
 const { findOne, find } = useStrapi()
 const config = useRuntimeConfig()
@@ -61,12 +61,22 @@ const categoryFilters = computed(() => {
   return Array.from(new Set(categories))
 })
 
+// Helper: does an event overlap a given time window?
+const eventOverlaps = (event: any, windowStart: Date, windowEnd: Date) => {
+  const start = new Date(event.date)
+  const end = event.end_date ? new Date(event.end_date) : start
+  return start <= windowEnd && end >= windowStart
+}
+
 const upcomingEvents = computed(() => {
   if (!events.value?.data) return []
-  
   const now = new Date()
   return events.value.data
-    .filter((event: any) => new Date(event.date) >= now)
+    .filter((event: any) => {
+      // Keep if event.date is in the future OR end_date is in the future
+      const end = event.end_date ? new Date(event.end_date) : new Date(event.date)
+      return end >= now
+    })
     .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
 })
 
@@ -78,37 +88,34 @@ const filteredEvents = computed(() => {
 const filteredThisWeekEvents = computed(() => {
   const now = new Date()
   const startOfWeek = new Date(now)
-  startOfWeek.setDate(now.getDate() - now.getDay()) // Start of current week (Sunday)
+  startOfWeek.setDate(now.getDate() - now.getDay())
   const endOfWeek = new Date(startOfWeek)
-  endOfWeek.setDate(startOfWeek.getDate() + 6) // End of current week (Saturday)
-  
-  return filteredEvents.value.filter((event: any) => {
-    const eventDate = new Date(event.date)
-    return eventDate >= startOfWeek && eventDate <= endOfWeek
-  })
+  endOfWeek.setDate(startOfWeek.getDate() + 6)
+  endOfWeek.setHours(23, 59, 59, 999)
+
+  return filteredEvents.value.filter((event: any) => eventOverlaps(event, startOfWeek, endOfWeek))
 })
 
 const filteredNextWeekEvents = computed(() => {
   const now = new Date()
   const startOfNextWeek = new Date(now)
-  startOfNextWeek.setDate(now.getDate() - now.getDay() + 7) // Start of next week (Sunday)
+  startOfNextWeek.setDate(now.getDate() - now.getDay() + 7)
   const endOfNextWeek = new Date(startOfNextWeek)
-  endOfNextWeek.setDate(startOfNextWeek.getDate() + 6) // End of next week (Saturday)
-  
-  return filteredEvents.value.filter((event: any) => {
-    const eventDate = new Date(event.date)
-    return eventDate >= startOfNextWeek && eventDate <= endOfNextWeek
-  })
+  endOfNextWeek.setDate(startOfNextWeek.getDate() + 6)
+  endOfNextWeek.setHours(23, 59, 59, 999)
+
+  return filteredEvents.value.filter((event: any) => eventOverlaps(event, startOfNextWeek, endOfNextWeek))
 })
 
 const filteredRemainingEvents = computed(() => {
   const now = new Date()
   const endOfNextWeek = new Date(now)
-  endOfNextWeek.setDate(now.getDate() - now.getDay() + 13) // End of next week (Saturday)
-  
+  endOfNextWeek.setDate(now.getDate() - now.getDay() + 13)
+  endOfNextWeek.setHours(23, 59, 59, 999)
+
   return filteredEvents.value.filter((event: any) => {
-    const eventDate = new Date(event.date)
-    return eventDate > endOfNextWeek
+    const start = new Date(event.date)
+    return start > endOfNextWeek
   })
 })
 
@@ -149,12 +156,12 @@ const toggleCategory = (category: string) => {
             <article v-for="item in filteredThisWeekEvents" :key="item.id">
               <div 
                 @click="openModal(item)"
-                class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+                class="flex p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
               >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
-                          {{ formatDateFrench(item.date) }} </div>
+                          {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
                       <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>    
@@ -172,12 +179,12 @@ const toggleCategory = (category: string) => {
             <article v-for="item in filteredNextWeekEvents" :key="item.id">
               <div 
                 @click="openModal(item)"
-                class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+                class="flex p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
               >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
-                          {{ formatDateFrench(item.date) }} </div>
+                          {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
                       <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
@@ -195,12 +202,12 @@ const toggleCategory = (category: string) => {
             <article v-for="item in filteredRemainingEvents" :key="item.id">
               <div 
                 @click="openModal(item)"
-                class="flex items-center p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+                class="flex p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
               >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
-                          {{ formatDateFrench(item.date) }} </div>
+                          {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
                       <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
@@ -250,7 +257,7 @@ const toggleCategory = (category: string) => {
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span class="text-lg">{{ formatDateFrench(selectedEvent?.date) }}</span>
+                    <span class="text-lg">{{ formatDateRangeFrench(selectedEvent?.date, selectedEvent?.end_date) }}</span>
                   </div>
                   <div class="flex items-center gap-3 text-zinc-700">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
