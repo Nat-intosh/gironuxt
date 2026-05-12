@@ -413,7 +413,7 @@ const subscribeToNewsletter = async () => {
     </section>
     <!-- ASSOS -->
     <section>
-      <div v-if="assoAdherentesItems.length > 0" class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos assos adhérentes</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On est très bien entouré∙es</p>
         <div class="flex flex-row gap-6 overflow-x-scroll ">
@@ -429,7 +429,7 @@ const subscribeToNewsletter = async () => {
     </section>
     <!-- PARTENAIRES -->
     <section>
-      <div v-if="partenairesItems.length > 0" class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos partenaires</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">On les remercie jamais assez</p>
         <div class="flex flex-row gap-6 overflow-x-scroll ">
