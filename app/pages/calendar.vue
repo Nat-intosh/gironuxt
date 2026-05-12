@@ -10,12 +10,15 @@ const { data: events, refresh } = await useAsyncData(
   'events',
   () => find('events', { 
     populate: ['cover', 'event_category'],
+    pagination: {
+      pageSize: 100,
+    }
     filters: {
       $or: [
         { date: { $gte: new Date().toISOString() } },
         { end_date: { $gte: new Date().toISOString() } }
       ]
-    }
+    },
   }),
   // { server: true, lazy: false }
 )
