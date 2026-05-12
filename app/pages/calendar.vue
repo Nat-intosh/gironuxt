@@ -150,13 +150,29 @@ const toggleCategory = (category: string) => {
 
 
 <template>
+
+<section>
+    <div class="py-24 md:py-32 bg-[#afaee8] bg-no-repeat bg-cover mask-clip-content">
+      <div class="flex flex-col-reverse gap-10 md:flex-row px-4 lg:px-0 max-w-6xl mx-auto"> 
+            <div class="text-left">
+                <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
+                    L'agenda
+                </h1>
+
+                <p class="text-left text-md md:text-lg mt-8 text-black max-w-lg">
+                  Découvre ici les prochains moments de partage en lien avec les luttes LGBTQIAP+. Alors que ce soit des permanences convivialité, des évènements festifs, ou des moments plus sérieux, hésite pas à passer !</p>
+                
+            </div>
+        </div>
+      </div>
+    </section>
   <div class="flex flex-col items-center justify-center py-20 max-w-6xl mx-4 lg:mx-auto">
     <div class="">
-      <h2 class="text-base uppercase text-zinc-900">L'agenda</h2>
-      <p class="text-2xl font-semibold text-zinc-900 mb-6">On se voit quand ?</p>
+      <!-- <h2 class="text-base uppercase text-zinc-900">L'agenda</h2> -->
+      <p class="text-2xl font-semibold text-zinc-900 mb-6">Alors, on se voit quand ?</p>
 
+      <span class="text-sm font-medium text-zinc-700 mb-4">Filtrer les évènements :</span>
       <div class="mb-6 flex flex-wrap gap-2">
-        <!-- <span class="text-sm font-medium text-zinc-700">Filtres :</span> -->
         <button
           v-for="category in categoryFilters"
           :key="category"
@@ -165,7 +181,7 @@ const toggleCategory = (category: string) => {
           class="inline-flex items-center gap-2 rounded-[10px] border px-3 py-2 text-sm transition focus:outline-none"
           :class="selectedCategory === category
             ? 'border-zinc-900 bg-zinc-900 text-white'
-            : 'border-zinc-300 bg-white text-zinc-700 hover:border-zinc-900 hover:text-zinc-900'"
+            : 'border-zinc-300 hover:border-zinc-600 bg-white text-zinc-700 hover:bg-[#F5FEF6] hover:text-zinc-900'"
         >
           <span>{{ category }}</span>
           <span v-if="selectedCategory === category" class="text-xs">✕</span>
@@ -173,20 +189,20 @@ const toggleCategory = (category: string) => {
       </div>
 
       <h3 v-if="filteredThisWeekEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4">Cette semaine</h3>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <article v-for="item in filteredThisWeekEvents" :key="item.id">
               <div 
                 @click="openModal(item)"
-                class="flex p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
               >
-                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
+                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4 mr-4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                           {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
-                      <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
-                      <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
-                      <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>    
-                      <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <h3 class="text-lg text-zinc-800 mt-4 break-all">{{item.name}}</h3>
+                      <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-4 border-black">{{item.event_category?.category}}</p>
+                      <p class="pt-6 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                      <p class="text-sm mt-6 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg> {{ item.place }}</p>
@@ -196,20 +212,20 @@ const toggleCategory = (category: string) => {
         </div>
 
       <h3 v-if="filteredNextWeekEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4 pt-16">Semaine prochaine</h3>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <article v-for="item in filteredNextWeekEvents" :key="item.id">
-              <div 
+             <div 
                 @click="openModal(item)"
-                class="flex p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
               >
-                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
+                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4 mr-4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                           {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
-                      <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
-                      <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
-                      <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-4 border-black">{{item.event_category?.category}}</p>
+                      <p class="pt-6 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                      <p class="text-sm mt-6 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg> {{ item.place }}</p>
@@ -219,20 +235,20 @@ const toggleCategory = (category: string) => {
         </div>
 
       <h3 v-if="filteredRemainingEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4 pt-16">Prochainement</h3>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <article v-for="item in filteredRemainingEvents" :key="item.id">
               <div 
                 @click="openModal(item)"
-                class="flex p-2 border border-black/10 hover:border-black/20 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer hover:bg-gray-50"
+                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
               >
-                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4" />
+                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[132px] h-full rounded-lg object-cover aspect-3/4 mr-4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                           {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
                       <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
-                      <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-2 border-zinc-400">{{item.event_category?.category}}</p>
-                      <p class="pt-4 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
-                      <p class="text-sm mt-4 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-4 border-black">{{item.event_category?.category}}</p>
+                      <p class="pt-6 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                      <p class="text-sm mt-6 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg> {{ item.place }}</p>

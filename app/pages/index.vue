@@ -212,6 +212,8 @@ const subscribeToNewsletter = async () => {
 </script>
 
 <template>
+
+<!-- HERO -->
   <section>
     <div class="py-32 md:py-48 bg-[url(~/assets/img/hero-bg.webp)] degragay bg-no-repeat bg-cover mask-clip-content">
       <div class="flex flex-col-reverse gap-10 md:flex-row px-4 lg:px-0 max-w-6xl mx-auto"> 
@@ -234,12 +236,6 @@ const subscribeToNewsletter = async () => {
                     </a>
                 </div>
             </div>
-            <!-- <div class="w-full md:max-w-xs lg:max-w-lg">
-              <img class="w-full h-auto" src="https://congres.bordeaux-tourisme.com/sites/bcb/files/styles/large/public/medias/widgets/misc/Drag%20Bingo%20.jpg.webp" alt="">
-            </div> -->
-              <!-- <div class="w-full md:max-w-xs lg:max-w-lg">
-                  <img class="w-full h-auto" src="https://congres.bordeaux-tourisme.com/sites/bcb/files/styles/large/public/medias/widgets/misc/Drag%20Bingo%20.jpg.webp" alt="">
-              </div> -->
         </div>
       </div>
     </section>
