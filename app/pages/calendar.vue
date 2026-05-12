@@ -17,7 +17,7 @@ const { data: events, refresh } = await useAsyncData(
       ]
     }
   }),
-  { server: true, lazy: false }
+  // { server: true, lazy: false }
 )
 
 const strapiUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"

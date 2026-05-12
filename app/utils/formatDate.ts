@@ -42,7 +42,7 @@ export function formatDateRangeFrench(startDate: string | Date, endDate?: string
 
   // Same month: "du 2 au 5 avril"
   if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
-    return `du ${startDay} au ${endDay} ${endMonth}`
+    return `Du ${startDay} au ${endDay} ${endMonth}`
   }
 
   // Different months: "du 2 avril au 5 mai"
