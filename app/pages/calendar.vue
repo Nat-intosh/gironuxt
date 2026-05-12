@@ -152,7 +152,7 @@ const toggleCategory = (category: string) => {
 <template>
 
 <section>
-    <div class="py-24 md:py-32 bg-[#afaee8] bg-no-repeat bg-cover mask-clip-content">
+    <div class="py-24 md:py-32 bg-[#D8D8FF] bg-no-repeat bg-cover mask-clip-content">
       <div class="flex flex-col-reverse gap-10 md:flex-row px-4 lg:px-0 max-w-6xl mx-auto"> 
             <div class="text-left">
                 <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
@@ -169,10 +169,10 @@ const toggleCategory = (category: string) => {
   <div class="flex flex-col items-center justify-center py-20 max-w-6xl mx-4 lg:mx-auto">
     <div class="">
       <!-- <h2 class="text-base uppercase text-zinc-900">L'agenda</h2> -->
-      <p class="text-2xl font-semibold text-zinc-900">Alors, on se voit quand ?</p>
+      <p class="text-2xl font-semibold text-zinc-900 mb-4">Alors, on se voit quand ?</p>
 
-      <span class="text-sm font-medium text-zinc-700 mb-4">Filtrer les évènements :</span>
-      <div class="mb-6 mt-2 flex flex-wrap gap-2">
+      <span class="text-sm font-medium text-zinc-700">Filtrer les évènements :</span>
+      <div class="mb-8 mt-2 flex flex-wrap gap-2">
         <button
           v-for="category in categoryFilters"
           :key="category"
