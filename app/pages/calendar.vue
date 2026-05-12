@@ -6,10 +6,18 @@ const { findOne, find } = useStrapi()
 const config = useRuntimeConfig()
 const nuxtApp = useNuxtApp()
 
-const { data: events } = await useAsyncData(
+const { data: events, refresh } = await useAsyncData(
   'events',
-  () => find('events', { populate: ['cover', 'event_category'] }),
-  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
+  () => find('events', { 
+    populate: ['cover', 'event_category'],
+    filters: {
+      $or: [
+        { date: { $gte: new Date().toISOString() } },
+        { end_date: { $gte: new Date().toISOString() } }
+      ]
+    }
+  }),
+  { server: true, lazy: false }
 )
 
 const strapiUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
