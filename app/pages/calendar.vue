@@ -169,10 +169,10 @@ const toggleCategory = (category: string) => {
   <div class="flex flex-col items-center justify-center py-20 max-w-6xl mx-4 lg:mx-auto">
     <div class="">
       <!-- <h2 class="text-base uppercase text-zinc-900">L'agenda</h2> -->
-      <p class="text-2xl font-semibold text-zinc-900 mb-6">Alors, on se voit quand ?</p>
+      <p class="text-2xl font-semibold text-zinc-900">Alors, on se voit quand ?</p>
 
       <span class="text-sm font-medium text-zinc-700 mb-4">Filtrer les évènements :</span>
-      <div class="mb-6 flex flex-wrap gap-2">
+      <div class="mb-6 mt-2 flex flex-wrap gap-2">
         <button
           v-for="category in categoryFilters"
           :key="category"
