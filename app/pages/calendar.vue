@@ -11,7 +11,7 @@ const { data: events, refresh } = await useAsyncData(
   () => find('events', { 
     populate: ['cover', 'event_category'],
     pagination: {
-      pageSize: 100,
+      pageSize: 200,
     },
     filters: {
       $or: [
