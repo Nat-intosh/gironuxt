@@ -6,25 +6,62 @@ const { findOne, find } = useStrapi()
 const config = useRuntimeConfig()
 const nuxtApp = useNuxtApp()
 
-const { data: events, refresh } = await useAsyncData(
+const PAGE_SIZE = 20
+
+const currentPage = ref(1)
+const allEvents = ref<any[]>([])
+const hasMore = ref(true)
+const loadingMore = ref(false)
+
+const { data: events } = await useAsyncData(
   'events',
   () => find('events', { 
     populate: ['cover', 'event_category'],
-    pagination: {
-      pageSize: 200,
-    },
+    pagination: { pageSize: PAGE_SIZE, page: 1 },
     filters: {
       $or: [
         { date: { $gte: new Date().toISOString() } },
         { end_date: { $gte: new Date().toISOString() } }
       ]
     }
-  }),
-  // { server: true, lazy: false }
+  })
 )
 
-const strapiUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
+// Initialize allEvents from SSR data
+if (events.value?.data) {
+  allEvents.value = events.value.data
+  hasMore.value = events.value.data.length === PAGE_SIZE
+}
 
+const loadMore = async () => {
+  if (loadingMore.value || !hasMore.value) return
+  loadingMore.value = true
+  currentPage.value++
+
+  try {
+    const result = await find('events', {
+      populate: ['cover', 'event_category'],
+      pagination: { pageSize: PAGE_SIZE, page: currentPage.value },
+      filters: {
+        $or: [
+          { date: { $gte: new Date().toISOString() } },
+          { end_date: { $gte: new Date().toISOString() } }
+        ]
+      }
+    })
+
+    if (result?.data?.length) {
+      allEvents.value = [...allEvents.value, ...result.data]
+      hasMore.value = result.data.length === PAGE_SIZE
+    } else {
+      hasMore.value = false
+    }
+  } finally {
+    loadingMore.value = false
+  }
+}
+
+const strapiUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
 
 const getImageUrl = (item: any) => {
   const path = item.cover?.formats?.small?.url 
@@ -32,9 +69,7 @@ const getImageUrl = (item: any) => {
     || item.cover?.url
   
   if (!path) return ''
-  // If already absolute, return as-is
   if (path.startsWith('http')) return path
-  // Otherwise prepend Strapi base URL
   return `${strapiUrl}${path}`
 }
 
@@ -44,7 +79,6 @@ const selectedCategory = ref<string | null>(route.query.category as string || nu
 const selectedEvent = ref<any>(null)
 const showModal = ref(false)
 
-// Watch for route changes to update selectedCategory
 watch(() => route.query.category, (newCategory) => {
   selectedCategory.value = newCategory as string || null
 })
@@ -62,13 +96,11 @@ const closeModal = () => {
 }
 
 const categoryFilters = computed(() => {
-  if (!events.value?.data) return []
-
-  const categories = events.value.data
+  if (!allEvents.value.length) return []
+  const categories = allEvents.value
     .map((event: any) => event.event_category)
     .filter((cat: any) => cat?.public && cat?.category)
     .map((cat: any) => cat.category)
-
   return Array.from(new Set(categories))
 })
 
@@ -77,7 +109,7 @@ const eventOverlaps = (event: any, windowStart: Date, windowEnd: Date) => {
   const start = new Date(event.date)
   start.setHours(0, 0, 0, 0)
   const end = event.end_date ? new Date(event.end_date) : new Date(event.date)
-  end.setHours(23, 59, 59, 999) // include full last day
+  end.setHours(23, 59, 59, 999)
   return start <= windowEnd && end >= windowStart
 }
 
@@ -88,14 +120,13 @@ const today = () => {
 }
 
 const upcomingEvents = computed(() => {
-  if (!events.value?.data) return []
+  if (!allEvents.value.length) return []
   const now = today()
-  return events.value.data
+  return allEvents.value
     .filter((event: any) => {
-      // Use end_date if available, otherwise fall back to date
       const endStr = event.end_date || event.date
       const end = new Date(endStr)
-      end.setHours(23, 59, 59, 999) // include the full last day
+      end.setHours(23, 59, 59, 999)
       return end >= now
     })
     .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
@@ -113,7 +144,6 @@ const filteredThisWeekEvents = computed(() => {
   const endOfWeek = new Date(startOfWeek)
   endOfWeek.setDate(startOfWeek.getDate() + 6)
   endOfWeek.setHours(23, 59, 59, 999)
-
   return filteredEvents.value.filter((event: any) => eventOverlaps(event, startOfWeek, endOfWeek))
 })
 
@@ -124,7 +154,6 @@ const filteredNextWeekEvents = computed(() => {
   const endOfNextWeek = new Date(startOfNextWeek)
   endOfNextWeek.setDate(startOfNextWeek.getDate() + 6)
   endOfNextWeek.setHours(23, 59, 59, 999)
-
   return filteredEvents.value.filter((event: any) => eventOverlaps(event, startOfNextWeek, endOfNextWeek))
 })
 
@@ -133,7 +162,6 @@ const filteredRemainingEvents = computed(() => {
   const endOfNextWeek = new Date(now)
   endOfNextWeek.setDate(now.getDate() - now.getDay() + 13)
   endOfNextWeek.setHours(23, 59, 59, 999)
-
   return filteredEvents.value.filter((event: any) => {
     const start = new Date(event.date)
     return start > endOfNextWeek
@@ -145,9 +173,7 @@ const toggleCategory = (category: string) => {
   selectedCategory.value = newCategory
   navigateTo({ query: { ...route.query, category: newCategory || undefined } })
 }
-
 </script>
-
 
 <template>
 
@@ -256,6 +282,21 @@ const toggleCategory = (category: string) => {
               </div>
             </article>
         </div>
+    </div>
+
+    <!-- Load More -->
+    <div v-if="hasMore" class="flex justify-center mt-12">
+      <button
+        @click="loadMore"
+        :disabled="loadingMore"
+        class="inline-flex items-center gap-2 rounded-[10px] border border-zinc-900 bg-white px-8 py-4 text-base font-semibold text-zinc-900 transition hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <svg v-if="loadingMore" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        <span>{{ loadingMore ? 'Chargement...' : 'Voir plus d\'événements' }}</span>
+      </button>
     </div>
 
     <!-- Modal -->
