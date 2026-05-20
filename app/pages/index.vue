@@ -264,8 +264,8 @@ const subscribeToNewsletter = async () => {
         <h2 class="text-base uppercase text-zinc-900">Nos actions</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on fait ?</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <article v-for="item in actionsItems" :key="item.id" class="h-full">
-            <div class="flex items-stretch md:gap-4 h-full rounded-[10px] py-4 overflow-hidden">
+          <article v-for="(item, i) in actionsItems" :key="item.id" class="h-full">
+            <div class="flex items-stretch md:gap-4 h-full rounded-[10px] py-4 overflow-hidden" :class="[i % 2 !== 0 ? 'flex-row-reverse md:flex-row' : '']">
               <img class="object-cover w-1/4 md:w-1/5 h-full rounded-[10px]" :src="getImageUrl(item)" alt="">
               <div class="flex flex-1 flex-col justify-between leading-normal px-4 md:py-0">
                 <h5 class="text-lg font-semibold text-heading mb-2">{{item.name}}</h5>
@@ -323,7 +323,7 @@ const subscribeToNewsletter = async () => {
             </div>
             <div class="flex flex-col gap-4">
               <a
-                href="mailto:contact@le-girofard.org"
+                href={{global.pride_benevole_link}}
                 class="inline-flex items-left justify-center rounded-[10px] border border-zinc-900 bg-white px-6 py-4 text-base font-semibold text-zinc-900 transition hover:bg-zinc-100"
               >
                 Devenir bénévole
