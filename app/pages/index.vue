@@ -323,13 +323,15 @@ const subscribeToNewsletter = async () => {
             </div>
             <div class="flex flex-col gap-4">
               <a
-                href={{global.pride_benevole_link}}
+                :href="global.value?.data?.pride_benevole_link"
+                target="_blank"
+                rel="noreferrer"
                 class="inline-flex items-left justify-center rounded-[10px] border border-zinc-900 bg-white px-6 py-4 text-base font-semibold text-zinc-900 transition hover:bg-zinc-100"
               >
                 Devenir bénévole
               </a>
               <NuxtLink
-                :to="{ path: '/calendar', query: { category: 'Fiertés 2026' } }"
+                :to="{ path: '/calendar', query: { categories: ['Fiertés 2026', 'QG Des Fiertés'] } }"
                 class="inline-flex items-left justify-center rounded-[10px] bg-zinc-900 px-6 py-4 text-base font-semibold text-white transition hover:bg-zinc-800"
               >
                 Découvrir le programme des fiertés

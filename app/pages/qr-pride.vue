@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const target = '/calendar?category=' + encodeURIComponent('Fiertés 2026')
+const target = '/calendar?categories=' + encodeURIComponent('Fiertés 2026') + '&categories=' + encodeURIComponent('QG Des Fiertés')
 navigateTo(target)
 </script>
 

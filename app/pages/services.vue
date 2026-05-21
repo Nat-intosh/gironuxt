@@ -4,16 +4,15 @@ import { marked } from 'marked'
 
 const { find } = useStrapi()
 const config = useRuntimeConfig()
-const nuxtApp = useNuxtApp()
 
 const { data: services } = await useAsyncData(
-  'services',
+  'services-page',
   () => find('services', {
     populate: {
       blocks: { populate: '*' },
     },
   }),
-  { server: true, lazy: false }
+  { lazy: false }
 )
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'

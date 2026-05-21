@@ -75,12 +75,17 @@ const getImageUrl = (item: any) => {
 
 const route = useRoute()
 
-const selectedCategory = ref<string | null>(route.query.category as string || null)
+const parseCategories = (query: any) => {
+  if (!query.categories) return []
+  return Array.isArray(query.categories) ? query.categories : [query.categories]
+}
+
+const selectedCategory = ref<string[]>(parseCategories(route.query))
 const selectedEvent = ref<any>(null)
 const showModal = ref(false)
 
-watch(() => route.query.category, (newCategory) => {
-  selectedCategory.value = newCategory as string || null
+watch(() => route.query.categories, (newCategories) => {
+  selectedCategory.value = parseCategories({ categories: newCategories })
 })
 
 const openModal = (event: any) => {
@@ -133,8 +138,8 @@ const upcomingEvents = computed(() => {
 })
 
 const filteredEvents = computed(() => {
-  if (!selectedCategory.value) return upcomingEvents.value
-  return upcomingEvents.value.filter((event: any) => event.event_category?.category === selectedCategory.value)
+  if (selectedCategory.value.length === 0) return upcomingEvents.value
+  return upcomingEvents.value.filter((event: any) => selectedCategory.value.includes(event.event_category?.category))
 })
 
 const filteredThisWeekEvents = computed(() => {
@@ -169,9 +174,14 @@ const filteredRemainingEvents = computed(() => {
 })
 
 const toggleCategory = (category: string) => {
-  const newCategory = selectedCategory.value === category ? null : category
-  selectedCategory.value = newCategory
-  navigateTo({ query: { ...route.query, category: newCategory || undefined } })
+  const index = selectedCategory.value.indexOf(category)
+  if (index > -1) {
+    selectedCategory.value.splice(index, 1)
+  } else {
+    selectedCategory.value.push(category)
+  }
+  const categoriesParam = selectedCategory.value.length > 0 ? selectedCategory.value : undefined
+  navigateTo({ query: { ...route.query, categories: categoriesParam } })
 }
 </script>
 
@@ -192,26 +202,35 @@ const toggleCategory = (category: string) => {
         </div>
       </div>
     </section>
-  <div class="flex flex-col items-center justify-center py-20 max-w-6xl mx-4 lg:mx-auto">
+  <div class="flex flex-col items-center justify-center py-20 max-w-6xl mx-4  lg:mx-auto">
     <div class="">
-      <!-- <h2 class="text-base uppercase text-zinc-900">L'agenda</h2> -->
-      <p class="text-2xl font-semibold text-zinc-900 mb-4">Alors, on se voit quand ?</p>
+      <div class="mb-8">
+        <!-- <h2 class="text-base uppercase text-zinc-900">L'agenda</h2> -->
+        <p class="text-2xl font-semibold text-zinc-900 mb-4">Alors, on se voit quand ?</p>
 
-      <span class="text-sm font-medium text-zinc-700">Filtrer les évènements :</span>
-      <div class="mb-8 mt-2 flex flex-wrap gap-2">
+        <span class="text-sm font-medium text-zinc-700">Filtrer les évènements :</span>
+        <div class=" mt-2 flex flex-wrap gap-2">
+          <button
+            v-for="category in categoryFilters"
+            :key="category"
+            type="button"
+            @click="toggleCategory(category)"
+            class="inline-flex items-center gap-2 rounded-[10px] border px-3 py-2 text-sm transition focus:outline-none"
+            :class="selectedCategory.includes(category)
+              ? 'border-zinc-900 bg-zinc-900 text-white'
+              : 'border-zinc-300 hover:border-zinc-600 bg-white text-zinc-700 hover:bg-[#F5FEF6] hover:text-zinc-900'"
+          >
+            <span>{{ category }}</span>
+            <span v-if="selectedCategory.includes(category)" class="text-xs">✕</span>
+          </button>
+        </div>
         <button
-          v-for="category in categoryFilters"
-          :key="category"
-          type="button"
-          @click="toggleCategory(category)"
-          class="inline-flex items-center gap-2 rounded-[10px] border px-3 py-2 text-sm transition focus:outline-none"
-          :class="selectedCategory === category
-            ? 'border-zinc-900 bg-zinc-900 text-white'
-            : 'border-zinc-300 hover:border-zinc-600 bg-white text-zinc-700 hover:bg-[#F5FEF6] hover:text-zinc-900'"
+          v-if="selectedCategory.length > 0"
+          @click="selectedCategory = []"
+          class="mt-2 inline-flex text-sm underline underline-offset-4"
         >
-          <span>{{ category }}</span>
-          <span v-if="selectedCategory === category" class="text-xs">✕</span>
-        </button>
+          <span>Supprimer les filtres</span>
+        </button  >
       </div>
 
       <h3 v-if="filteredThisWeekEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4">Cette semaine</h3>
@@ -221,13 +240,13 @@ const toggleCategory = (category: string) => {
                 @click="openModal(item)"
                 class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
               >
-                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4 mr-4" />
+                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[180px] h-full rounded-lg object-cover aspect-[4/5] mr-4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                           {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
-                      <h3 class="text-lg text-zinc-800 mt-4 break-all">{{item.name}}</h3>
+                      <h3 class="text-lg text-zinc-800 mt-4 break-normal">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-4 border-black">{{item.event_category?.category}}</p>
-                      <p class="pt-6 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                      <p class="pt-6 text-base text-zinc-600 break-normal whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
                       <p class="text-sm mt-6 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -244,13 +263,13 @@ const toggleCategory = (category: string) => {
                 @click="openModal(item)"
                 class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
               >
-                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[118px] h-full rounded-lg object-cover aspect-3/4 mr-4" />
+                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[180px] h-full rounded-lg object-cover aspect-[4/5] mr-4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                           {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
-                      <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
+                      <h3 class="text-lg text-zinc-900 mt-4 break-normal">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-4 border-black">{{item.event_category?.category}}</p>
-                      <p class="pt-6 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                      <p class="pt-6 text-base text-zinc-600 break-normal whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
                       <p class="text-sm mt-6 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -267,13 +286,13 @@ const toggleCategory = (category: string) => {
                 @click="openModal(item)"
                 class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
               >
-                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[132px] h-full rounded-lg object-cover aspect-3/4 mr-4" />
+                  <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[180px] rounded-lg object-cover aspect-square aspect-[4/5] mr-4" />
                   <div class="ml-4">
                       <div class="mt-2 text-sm text-zinc-600 flex items-center gap-1.5">
                           {{ formatDateRangeFrench(item.date, item.end_date) }} </div>
-                      <h3 class="text-lg text-zinc-900 mt-4 break-all">{{item.name}}</h3>
+                      <h3 class="text-lg text-zinc-900 mt-4 break-normal">{{item.name}}</h3>
                       <p class="text-sm w-fit text-zinc-600 border rounded-full px-2 mt-4 border-black">{{item.event_category?.category}}</p>
-                      <p class="pt-6 text-base text-zinc-600 break-all whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
+                      <p class="pt-6 text-base text-zinc-600 break-normal whitespace-normal line-clamp-2">{{item.shortdescription}}</p>
                       <p class="text-sm mt-6 mb-2 text-zinc-600 flex items-center gap-1.5"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
