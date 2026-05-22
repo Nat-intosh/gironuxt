@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { marked } from 'marked'
 
 const { find } = useStrapi()
@@ -11,8 +11,7 @@ const { data: services } = await useAsyncData(
     populate: {
       blocks: { populate: '*' },
     },
-  }),
-  { server: true, lazy: false }
+  })
 )
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
