@@ -11,7 +11,10 @@ const { data: faqs } = await useAsyncData(
     populate: ['faq_category'],
     pagination: { pageSize: 100 }
   }),
-  { dedupe: 'defer' }
+  { dedupe: 'defer',
+    server: true,
+    lazy: false,
+   }
 )
 const faqsItems = computed(() => (faqs.value?.data as any[]) || [])
 
