@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { marked, Renderer } from 'marked'
 
 const { find } = useStrapi()
@@ -12,8 +12,9 @@ const { data: faqs } = await useAsyncData(
     populate: ['faq_category'],
     pagination: { pageSize: 100 }
   }),
-  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
+  { lazy: false },
 )
+const faqsItems = computed(() => (faqs.value?.data as any[]) || [])
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
 
