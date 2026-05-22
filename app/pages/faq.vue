@@ -4,7 +4,6 @@ import { marked, Renderer } from 'marked'
 
 const { find } = useStrapi()
 const config = useRuntimeConfig()
-const nuxtApp = useNuxtApp()
 
 const { data: faqs } = await useAsyncData(
   'faqs',
@@ -12,7 +11,7 @@ const { data: faqs } = await useAsyncData(
     populate: ['faq_category'],
     pagination: { pageSize: 100 }
   }),
-  { lazy: false },
+  { server: true, lazy: false }
 )
 const faqsItems = computed(() => (faqs.value?.data as any[]) || [])
 
