@@ -4,14 +4,16 @@ import { marked } from 'marked'
 
 const { find } = useStrapi()
 const config = useRuntimeConfig()
+const route = useRoute()
 
 const { data: services } = await useAsyncData(
-  'services-page',
+  'services',
   () => find('services', {
     populate: {
       blocks: { populate: '*' },
     },
-  })
+  }),
+  { dedupe: 'defer' }
 )
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'

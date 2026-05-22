@@ -12,7 +12,7 @@ const { data: actions } = await useAsyncData(
       blocks: { populate: '*' },
     },
   }),
-  { server: true, lazy: false }
+  { dedupe: 'defer' }
 )
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
