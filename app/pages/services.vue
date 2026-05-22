@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { marked } from 'marked'
 
 const { find } = useStrapi()
 const config = useRuntimeConfig()
-const route = useRoute()
+const nuxtApp = useNuxtApp()
 
 const { data: services } = await useAsyncData(
   'services',
@@ -13,10 +13,11 @@ const { data: services } = await useAsyncData(
       blocks: { populate: '*' },
     },
   }),
-  { dedupe: 'defer',
+  {
     server: true,
     lazy: false,
-   }
+    getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
+  }
 )
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
