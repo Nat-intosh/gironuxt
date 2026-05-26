@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   
 
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/strapi', '@nuxt/image'], 
+  modules: ['@tailwindcss/vite', '@nuxtjs/strapi', '@nuxt/image'], 
   
   css: ['./app/assets/css/main.css'],
   
