@@ -116,7 +116,11 @@ const today = () => {
 const strapiUrl = config.public.strapi?.url || "http://localhost:1337"
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || "http://localhost:1337"
 
-const targetPrideDate = computed(() => new Date(global.value?.data?.pride_date)) || new Date('2026-05-30T14:00:00')
+const targetPrideDate = computed(() => {
+  const date = global.value?.data?.pride_date;
+  return date ? new Date(date) : new Date('2026-05-30T14:00:00');
+})
+  
 const countdownLabel = ref('')
 let countdownInterval: ReturnType<typeof setInterval> | undefined
 
