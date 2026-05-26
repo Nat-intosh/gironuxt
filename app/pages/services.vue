@@ -14,8 +14,6 @@ const { data: services } = await useAsyncData(
     },
   }),
   {
-    server: true,
-    lazy: false,
     getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
   }
 )

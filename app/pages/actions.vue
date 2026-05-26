@@ -12,9 +12,8 @@ const { data: actions } = await useAsyncData(
       blocks: { populate: '*' },
     },
   }),
-  { dedupe: 'defer',
-    server: true,
-    lazy: false,
+  { 
+    getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
    }
 )
 
