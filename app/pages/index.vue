@@ -120,7 +120,7 @@ const targetPrideDate = computed(() => {
   const date = global.value?.data?.pride_date;
   return date ? new Date(date) : new Date('2026-05-30T14:00:00');
 })
-  
+
 const countdownLabel = ref('')
 let countdownInterval: ReturnType<typeof setInterval> | undefined
 
@@ -249,9 +249,9 @@ const subscribeToNewsletter = async () => {
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
         <h2 class="text-base uppercase text-zinc-900">Nos services</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on propose ici ?</p>
-        <div class="grid mb-8 bg-neutral-primary-soft border border-default rounded-[10px] shadow-xs md:mb-12 md:grid-cols-4 grid-cols-2 pt-4 bg-[#F5FEF6]">
+        <div class="grid mb-8 bg-neutral-primary-soft border border-black/10 rounded-[10px] shadow-xs md:mb-12 md:grid-cols-4 grid-cols-2 pt-4 bg-[#F5FEF6]">
           <article v-for="item in serviceItems" :key="item.id" class="h-full">
-            <figure class="flex flex-col h-full items-left px-4 py-8 md:p-8 text-left border-b border-default rounded-t-[10px] md:rounded-t-none md:rounded-d-[10px] border-e">
+            <figure class="flex flex-col h-full items-left px-4 py-8 md:p-8 text-left border-b border-black/10 rounded-t-[10px] md:rounded-t-none md:rounded-d-[10px] border-e">
                   <blockquote class="max-w-2xl mx-auto text-body h-full flex flex-col">
                       <h3 class="text-lg font-semibold text-heading">{{item.name}}</h3>
                       <p class="my-4 flex-1">{{item.short_description}}</p>

@@ -1,7 +1,11 @@
-// plugins/marked.ts
+// app/plugins/marked.ts
 import { marked, Renderer } from 'marked'
 
 export default defineNuxtPlugin(() => {
+  // Add these two lines to properly define the URL configuration
+  const config = useRuntimeConfig()
+  const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
+
   const renderer = new Renderer()
 
   renderer.heading = ({ text, depth }) => {
@@ -13,13 +17,12 @@ export default defineNuxtPlugin(() => {
     return `<h3 class="${sizes[depth] || 'text-lg font-semibold'}">${text}</h3>`
   }
 
-renderer.paragraph = ({ text }) => {
-  // If the paragraph only contains an image, don't wrap it in <p>
-  if (text.trimStart().startsWith('<img')) {
-    return text
+  renderer.paragraph = ({ text }) => {
+    if (text.trimStart().startsWith('<img')) {
+      return text
+    }
+    return `<p class="text-zinc-600 text-base leading-relaxed mb-8">${text}</p>`
   }
-  return `<p class="text-zinc-600 text-base leading-relaxed mb-8">${text}</p>`
-}
 
   renderer.strong = ({ text }) =>
     `<strong class="font-semibold text-zinc-900">${text}</strong>`
@@ -38,8 +41,8 @@ renderer.paragraph = ({ text }) => {
   renderer.listitem = ({ text }) =>
     `<li class="text-base leading-relaxed">${text}</li>`
 
- 
   renderer.image = ({ href, title, text }) => {
+    // This will now work without crashing Vue
     const fixedHref = href?.replace(
       /https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/,
       strapiPublicUrl

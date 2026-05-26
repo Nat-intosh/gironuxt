@@ -202,8 +202,8 @@ const toggleCategory = (category: string) => {
         </div>
       </div>
     </section>
-  <div class="flex flex-col items-center justify-center py-20 max-w-6xl mx-4  lg:mx-auto">
-    <div class="">
+  <div class="flex flex-col items-center justify-center py-20 lg:w-6xl mx-4  lg:mx-auto">
+    <div class="w-full">
       <div class="mb-8">
         <!-- <h2 class="text-base uppercase text-zinc-900">L'agenda</h2> -->
         <p class="text-2xl font-semibold text-zinc-900 mb-4">Alors, on se voit quand ?</p>
@@ -238,7 +238,7 @@ const toggleCategory = (category: string) => {
             <article v-for="item in filteredThisWeekEvents" :key="item.id">
               <div 
                 @click="openModal(item)"
-                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
+                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-full h-full cursor-pointer bg-[#F5FEF6]"
               >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[180px] h-full rounded-lg object-cover aspect-[4/5] mr-4" />
                   <div class="ml-4">
@@ -261,7 +261,7 @@ const toggleCategory = (category: string) => {
             <article v-for="item in filteredNextWeekEvents" :key="item.id">
              <div 
                 @click="openModal(item)"
-                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
+                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-full h-full cursor-pointer bg-[#F5FEF6]"
               >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[180px] h-full rounded-lg object-cover aspect-[4/5] mr-4" />
                   <div class="ml-4">
@@ -284,7 +284,7 @@ const toggleCategory = (category: string) => {
             <article v-for="item in filteredRemainingEvents" :key="item.id">
               <div 
                 @click="openModal(item)"
-                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-sm h-full cursor-pointer bg-[#F5FEF6]"
+                class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl w-lg lg:w-full h-full cursor-pointer bg-[#F5FEF6]"
               >
                   <img v-if="item.cover" :src="getImageUrl(item)" alt="Event cover" class="max-w-[180px] rounded-lg object-cover aspect-square aspect-[4/5] mr-4" />
                   <div class="ml-4">

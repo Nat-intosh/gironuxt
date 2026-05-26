@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { marked, Renderer } from 'marked'
+import { ref, computed } from 'vue'
+import { marked } from 'marked' // Removed local renderer
 
 const { find } = useStrapi()
-const config = useRuntimeConfig()
 
 const { data: faqs } = await useAsyncData(
   'faqs',
@@ -16,33 +15,10 @@ const { data: faqs } = await useAsyncData(
     lazy: false,
    }
 )
-const faqsItems = computed(() => (faqs.value?.data as any[]) || [])
 
-const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
-
-// Custom renderer — fix image URLs from localhost to production
-const renderer = new Renderer()
-
-renderer.paragraph = ({ text }) =>
-  `<p class="text-zinc-600 text-base leading-relaxed mb-4">${text}</p>`
-
-renderer.strong = ({ text }) =>
-  `<strong class="font-semibold text-zinc-900">${text}</strong>`
-
-renderer.link = ({ href, text }) =>
-  `<a href="${href}" class="text-indigo-600 underline hover:text-indigo-800 transition-colors" target="_blank">${text}</a>`
-
-renderer.image = ({ href, text }) => {
-  // Replace localhost/127.0.0.1 with production strapi URL
-  const fixedHref = href?.replace(/https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/, strapiPublicUrl)
-  return `<img src="${fixedHref}" alt="${text}" class="rounded-xl mt-4 mb-2 max-h-64 object-cover w-full border border-black/5 shadow-sm" />`
-}
-
-marked.use({ renderer })
-
-// Group FAQs by category
 const faqItems = computed(() => (faqs.value?.data as any[]) || [])
 
+// Group FAQs by category
 const groupedFaqs = computed(() => {
   const groups: Record<string, { name: string, items: any[] }> = {}
   for (const faq of faqItems.value) {
