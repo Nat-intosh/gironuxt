@@ -1,3 +1,5 @@
+import tailwindcss from '@tailwindcss/vite'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -7,7 +9,13 @@ export default defineNuxtConfig({
   
   css: ['./app/assets/css/main.css'],
   
-
+  // 2. Added the Vite plugin configuration here
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
+  },
+  
   runtimeConfig: {
     public: {
       strapi: {
