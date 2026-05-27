@@ -77,7 +77,18 @@ const setSliderIndex = (id: number, i: number) => {
         <div
           v-for="block in getRichText(item.blocks)"
           :key="block.id"
-          class="max-w-2xl"
+          class="
+            max-w-none mb-24
+            [&_p]:text-zinc-600 [&_p]:text-base [&_p]:leading-relaxed [&_p]:mb-8
+            [&_h1]:text-2xl [&_h1]:font-semibold [&_h1]:text-zinc-900 [&_h1]:mb-8
+            [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-zinc-900 [&_h2]:mb-8
+            [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-zinc-800 [&_h3]:mt-4 [&_h3]:mb-8
+            [&_strong]:font-semibold [&_strong]:text-zinc-900
+            [&_a]:text-indigo-600 [&_a]:underline hover:[&_a]:text-indigo-800 [&_a]:transition-colors
+            [&_ul]:list-disc [&_ul]:list-inside [&_ul]:space-y-1 [&_ul]:mb-4 [&_ul]:text-zinc-600
+            [&_ol]:list-decimal [&_ol]:list-inside [&_ol]:space-y-1 [&_ol]:mb-4 [&_ol]:text-zinc-600
+            [&_li]:text-base [&_li]:leading-relaxed
+          "
           v-html="$md(block.body)"
         />
 
