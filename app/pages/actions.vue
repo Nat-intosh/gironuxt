@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { marked } from 'marked'
+// import { marked } from 'marked'
 
 const { find } = useStrapi()
 const config = useRuntimeConfig()
@@ -75,8 +75,8 @@ const getSliderFiles = (blocks: any[]) =>
             <div
               v-for="block in getRichText(item.blocks)"
               :key="block.id"
-              class="prose prose-zinc max-w-none"
-              v-html="marked(block.body)"
+              class="max-w-none"
+              v-html="$md(block.body)"
             />
 
           </div>

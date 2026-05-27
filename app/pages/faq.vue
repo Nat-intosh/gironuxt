@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { marked } from 'marked' // Removed local renderer
+// import { marked } from 'marked' // Removed local renderer
 
 const { find } = useStrapi()
 
@@ -98,7 +98,7 @@ const toggle = (id: number) => {
               <div v-if="openId === faq.id" class="px-6 pb-6">
                 <div
                   class="pt-2 border-t border-zinc-200"
-                  v-html="marked(faq.answer)"
+                  v-html="$md(block.body)"
                 />
               </div>
             </Transition>

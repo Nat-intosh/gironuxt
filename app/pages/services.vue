@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { marked } from 'marked'
+// import { marked } from 'marked'
 
 const { find } = useStrapi()
 const config = useRuntimeConfig()
@@ -77,8 +77,8 @@ const setSliderIndex = (id: number, i: number) => {
         <div
           v-for="block in getRichText(item.blocks)"
           :key="block.id"
-          class="max-w-2xl mb-24"
-          v-html="marked(block.body)"
+          class="max-w-none"
+          v-html="$md(block.body)"
         />
 
         <!-- Slider -->
