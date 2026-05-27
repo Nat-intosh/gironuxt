@@ -13,11 +13,10 @@ const { data: services } = await useAsyncData(
       blocks: { populate: '*' },
     },
   }),
-  {
+  { dedupe: 'defer',
     server: true,
     lazy: false,
-    getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
-  }
+   }
 )
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
