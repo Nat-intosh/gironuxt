@@ -7,7 +7,7 @@ const config = useRuntimeConfig()
 const nuxtApp = useNuxtApp()
 
 const { data: services } = await useAsyncData(
-  'services',
+  'services-page', // Changed from 'services'
   () => find('services', {
     populate: {
       blocks: { populate: '*' },
