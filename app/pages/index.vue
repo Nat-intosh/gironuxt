@@ -342,6 +342,7 @@ const subscribeToNewsletter = async () => {
               </NuxtLink>
             </div>
           </div>
+          <iframe class="w-full mt-8 pt-[-12px] lg:aspect-video aspect-square rounded-[10px]" src="https://www.google.com/maps/d/embed?mid=1CRS1pulgoDNU8ioYAsy4mWjIUraKsig&ehbc=2E312F"></iframe>
         </div>
       </div>
     </section>
