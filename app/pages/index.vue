@@ -323,7 +323,7 @@ const subscribeToNewsletter = async () => {
             <div>
               <!-- <p class="text-sm uppercase tracking-[0.3em] text-zinc-900/80 mb-3">Pride</p> -->
               <h2 class="text-3xl md:text-4xl font-semibold text-zinc-900 mb-4">On marche dans <span class="font-black text-[#0F172A]">{{ countdownLabel }}</span></h2>
-              <p class="text-base text-zinc-700 max-w-2xl">Cette année on fête les 30 ans des fiertés à Bordeaux, alors on fait tout notre possible pour que vous passiez un super moment :)</p>
+              <p class="text-base text-zinc-700 max-w-2xl">{{global?.data?.pride_description || "Cette année on fête les 30 ans des fiertés à Bordeaux, alors on fait tout notre possible pour que vous passiez un super moment :)"}}</p>
             </div>
             <div class="flex flex-col gap-4">
               <a
@@ -342,7 +342,11 @@ const subscribeToNewsletter = async () => {
               </NuxtLink>
             </div>
           </div>
-          <iframe class="w-full mt-8 pt-[-12px] lg:aspect-video aspect-square rounded-[10px]" src="https://www.google.com/maps/d/embed?mid=1CRS1pulgoDNU8ioYAsy4mWjIUraKsig&ehbc=2E312F"></iframe>
+          <iframe 
+            v-if="global?.data?.pride_map" 
+            class="w-full mt-8 pt-[-12px] lg:aspect-video aspect-square rounded-[10px]" 
+            :src="global?.data?.pride_map"
+          ></iframe>        
         </div>
       </div>
     </section>
