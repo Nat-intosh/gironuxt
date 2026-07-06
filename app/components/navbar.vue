@@ -7,19 +7,35 @@
             </svg>        
             </a>
 
-            <ul class="md:flex hidden items-center gap-10">
+            <ul class="md:flex hidden items-center gap-8">
                 <!-- <li><nuxt-link to="/" class="hover:text-gray-500/80 transition">Accueil</nuxt-link></li> -->
                 <!-- <li><nuxt-link to="/association" class="hover:text-gray-500/80 transition">L'association</nuxt-link></li> -->
-                <li><nuxt-link to="/services" class="hover:text-gray-500/80 transition">Nos services</nuxt-link></li>
-                <li><nuxt-link to="/actions" class="hover:text-gray-500/80 transition">Nos actions</nuxt-link></li>
+                 <li class="relative group z-10">
+                    <nuxt-link to="/services" class="flex items-center gap-1 hover:text-gray-500/80 transition py-6">
+                        Nos services
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </nuxt-link>
+                    
+                    <div class="absolute left-0 top-16 hidden w-48 bg-white shadow-[0px_4px_25px_0px_#00000015] border border-gray-100 rounded-[10px] p-3 group-hover:block transition-all opacity-0 group-hover:opacity-100">
+                        <ul class="flex flex-col gap-1">
+                            <li v-for="service in servicesList" :key="service.id">
+                                <nuxt-link :to="`/services/${service.slug}`" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#14663E] rounded-lg transition-colors">
+                                    {{ service.name }}
+                                </nuxt-link>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <!-- <li><nuxt-link to="/services" class="hover:text-gray-500/80 transition">Nos services</nuxt-link></li> -->
+                <li><nuxt-link to="/activities" class="hover:text-gray-500/80 transition">Nos activités</nuxt-link></li>
+                <li><nuxt-link to="/actions" class="hover:text-gray-500/80 transition">Nos interventions</nuxt-link></li>
                 <li><nuxt-link to="/calendar" class="hover:text-gray-500/80 transition">L'agenda</nuxt-link></li>
                 <li><nuxt-link to="/blog" class="hover:text-gray-500/80 transition">Le Blog</nuxt-link></li>
                 <li><nuxt-link to="/faq" class="hover:text-gray-500/80 transition">La FAQ</nuxt-link></li>
             </ul>
-
-            <button type="button" class="bg-white text-gray-600 border border-gray-300 md:inline hidden text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-[10px]">
-                Nous soutenir
-            </button>
+            <nuxt-link to="/support-us" class="bg-white text-gray-600 border border-gray-300 md:inline hidden text-sm hover:bg-gray-50 active:scale-95 transition-all rounded-[10px] py-3 px-6">Nous soutenir</nuxt-link>
 
             <button aria-label="menu-btn" type="button" class="menu-btn inline-block md:hidden active:scale-90 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="#000">
@@ -31,16 +47,36 @@
             <ul class="flex flex-col space-y-8 text-xl text-black">
                 <!-- <li><nuxt-link to="/" class="text-xl">Accueil</nuxt-link></li> -->
                 <!-- <li><nuxt-link to="/association" class="text-xl">L'association</nuxt-link></li> -->
-                <li><nuxt-link to="/services" class="text-3xl font-semibold">Nos services</nuxt-link></li>
-                <li><nuxt-link to="/actions" class="text-3xl font-semibold">Nos actions</nuxt-link></li>
+                <!-- <li><nuxt-link to="/services" class="text-3xl font-semibold">Nos services</nuxt-link></li> -->
+                <li class="flex flex-col">
+                    <div class="flex items-center justify-between w-full">
+                        <nuxt-link to="/services" class="text-3xl font-semibold">Nos services</nuxt-link>
+                        <button @click="isMobileServicesOpen = !isMobileServicesOpen" class="p-2 bg-gray-50 rounded-lg active:scale-95 transition-transform">
+                            <svg xmlns="http://www.w3.org/2000/svg" :class="{'rotate-180': isMobileServicesOpen}" class="h-6 w-6 transition-transform text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <ul v-show="isMobileServicesOpen" class="flex flex-col space-y-4 pl-4 mt-6 border-l-2 border-gray-100">
+                        <li v-for="service in servicesList" :key="service.id">
+                            <nuxt-link :to="`/services/${service.slug}`" class="text-xl text-gray-600">
+                                {{ service.name }}
+                            </nuxt-link>
+                        </li>
+                    </ul>
+                </li>
+                <li><nuxt-link to="/activities" class="text-3xl font-semibold">Nos activités</nuxt-link></li>
+                <li><nuxt-link to="/actions" class="text-3xl font-semibold">Nos interventions</nuxt-link></li>
                 <li><nuxt-link to="/calendar" class="text-3xl font-semibold">L'agenda</nuxt-link></li>
                 <li><nuxt-link to="/blog" class="text-3xl font-semibold">Le Blog</nuxt-link></li>
                 <li><nuxt-link to="/faq" class="text-3xl font-semibold">La FAQ</nuxt-link></li>
+                <li class="w-full h-fit"><nuxt-link to="/support-us" class="bg-white text-gray-600 border border-gray-300 text-sm hover:bg-gray-50 active:scale-95 transition-all rounded-[10px] flex items-center align-center px-6 py-4">Nous soutenir</nuxt-link></li>
+                <li class="w-full h-fit"><nuxt-link to="/contact" class="bg-[#78E0AF] text-black text-sm hover:bg-gray-50 active:scale-95 transition-all rounded-[10px] flex items-center align-center px-6 py-4">Nous contacter</nuxt-link></li>
             </ul>
-
-            <button type="button" class="bg-white text-gray-600 border border-gray-300 mt-16 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full">
+            <!-- <button type="button" class="bg-white text-gray-600 border border-gray-300 mt-16 text-sm hover:bg-gray-50 active:scale-95 transition-all w-40 h-11 rounded-full">
                 Nous soutenir
-            </button>
+            </button> -->
         </div>
 
         <div class="w-full absolute bottom-0 left-0 right-0 h-1 flex">
@@ -59,7 +95,23 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref, computed } from 'vue'
+
+// 1. Variable pour gérer l'ouverture du sous-menu sur Mobile
+const isMobileServicesOpen = ref(false)
+
+// 2. Requête Strapi pour récupérer les services (les mêmes que sur la page /services)
+const { find } = useStrapi()
+const { data: servicesResponse } = await useAsyncData('navbar-services', () =>
+  find('services', {
+    filters: {
+        is_an_activity: false
+    },
+    // On peut trier par nom alphabétique pour un rendu plus propre dans la navbar
+    sort: ['name:asc']
+  })
+)
+const servicesList = computed(() => servicesResponse.value?.data || [])
 
 onMounted(() => {
   const menuButtons = document.querySelectorAll('.menu-btn')

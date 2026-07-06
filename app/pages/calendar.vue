@@ -6,7 +6,7 @@ const { findOne, find } = useStrapi()
 const config = useRuntimeConfig()
 const nuxtApp = useNuxtApp()
 
-const PAGE_SIZE = 200
+const PAGE_SIZE = 200 
 
 const currentPage = ref(1)
 const allEvents = ref<any[]>([])

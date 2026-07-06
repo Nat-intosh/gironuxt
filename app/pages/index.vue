@@ -56,6 +56,17 @@ const { data: collectifs } = await useAsyncData(
   { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
 )
 
+const { data: homeArticlesResponse } = await useAsyncData('home-articles', () =>
+  find('articles', {
+    populate: ['cover', 'category', 'author'],
+    // On trie d'abord par is_highlighted (les "true" en premier), puis par date de publication
+    sort: ['is_highlighted:desc', 'publishedAt:desc'],
+    // On limite le résultat à 2 articles max
+    pagination: { limit: 2 }
+  })
+)
+
+const homeArticles = computed(() => homeArticlesResponse.value?.data || [])
 
 const getImageUrl = (item: any) => {
   const path = item.cover?.formats?.small?.url 
@@ -235,7 +246,7 @@ const subscribeToNewsletter = async () => {
                     <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-200 text-black active:scale-95 transition-all" type="button" href="https://www.helloasso.com/associations/girofard">
                         nous soutenir
                     </a>
-                    <a class="px-5 py-3 rounded-[10px] bg-[#78E0AF] text-black font-semibold flex items-center gap-2 hover:bg-indigo-600/5 active:scale-95 transition-all" type="button" href="mailto:contact@le-girofard.org">
+                    <a class="px-5 py-3 rounded-[10px] bg-[#78E0AF] text-black font-semibold flex items-center gap-2 hover:bg-indigo-600/5 active:scale-95 transition-all" type="button" href="/contact">
                         <span>nous contacter</span>
                     </a>
                 </div>
@@ -246,8 +257,8 @@ const subscribeToNewsletter = async () => {
     
     <!-- SERVICES -->
     <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
-        <h2 class="text-base uppercase text-zinc-900">Nos services</h2>
+      <div class="max-w-6xl mx-auto px-4 lg:px-0  pt-32 pb-16">
+        <h2 class="text-base uppercase text-zinc-900">Nos services & activités</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on propose ici ?</p>
         <div class="grid mb-8 bg-neutral-primary-soft border border-black/10 rounded-[10px] shadow-xs md:mb-12 md:grid-cols-4 grid-cols-2 pt-4 bg-[#F5FEF6]">
           <article v-for="item in serviceItems" :key="item.id" class="h-full">
@@ -255,17 +266,17 @@ const subscribeToNewsletter = async () => {
                   <blockquote class="max-w-2xl mx-auto text-body h-full flex flex-col">
                       <h3 class="text-lg font-semibold text-heading">{{item.name}}</h3>
                       <p class="my-4 flex-1">{{item.short_description}}</p>
-                      <!-- <div class="text-md text-body">Developer at Open AI</div> -->
+                      <nuxt-link :to="item.is_an_activity ? `/activities#${item.slug}` : `/services/${item.slug}`" class="underline lg:hover:underline">en apprendre plus</nuxt-link>
                   </blockquote>
               </figure>
-            </article>            
+            </article>     
         </div>
       </div>
     </section>
     <!-- ACTIONS -->
     <section>
       <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
-        <h2 class="text-base uppercase text-zinc-900">Nos actions</h2>
+        <h2 class="text-base uppercase text-zinc-900">Nos interventions</h2>
         <p class="text-2xl font-semibold text-zinc-900 mb-6">Qu'est-ce qu'on fait ?</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <article v-for="(item, i) in actionsItems" :key="item.id" class="h-full">
@@ -274,6 +285,7 @@ const subscribeToNewsletter = async () => {
               <div class="flex flex-1 flex-col justify-between leading-normal px-4 md:py-0">
                 <h5 class="text-lg font-semibold text-heading mb-2">{{item.name}}</h5>
                 <p class="text-body">{{item.short_description}}</p>
+                <nuxt-link :to="`/actions#${item.slug}`" class="underline lg:hover:underline mt-4">en apprendre plus</nuxt-link>
               </div>
             </div>
           </article>
@@ -308,7 +320,7 @@ const subscribeToNewsletter = async () => {
           </article>
         </div>
         <div class="mt-6">
-          <NuxtLink to="/calendar" class="text-zinc-900 hover:underline underline font-semibold">Voir tous les événements</NuxtLink>
+          <NuxtLink to="/calendar" class="text-zinc-900 hover:underline underline font-semibold">Voir tous les événements →</NuxtLink>
         </div>
       </div>
     </section>
@@ -351,16 +363,148 @@ const subscribeToNewsletter = async () => {
       </div>
     </section>
     <!-- ACTUALITES -->
-    <section>
-      <div class="max-w-6xl mx-auto px-4 lg:px-0 py-16 hidden">
+    <section class="py-16">
+      <div class="max-w-6xl mx-auto px-4 lg:px-0">
         <h2 class="text-base uppercase text-zinc-900">Actualités</h2>
-        <p class="text-2xl font-semibold text-zinc-900 mb-6">On est pas peu fier-e-s de ces actus</p>
+        <p class="text-2xl font-semibold text-zinc-900 mb-6">On est pas peu fier∙e∙s de ces actus</p>
+        
+        </div>
+
+        <!-- Grille des 2 articles (reprise du design de la page blog) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 max-w-6xl px-4 lg:px-0 mx-auto">
+          <NuxtLink 
+            v-for="article in homeArticles" 
+            :key="article.id" 
+            :to="`/blog/${article.slug}`"
+            :class="[
+              'relative rounded-xl bg-[#F5FEF6] border border-black/5 overflow-hidden transition-all flex flex-col border border-gray-100'
+            ]"
+          >
+            <!-- Badge "À la une" -->
+            <div v-if="article.is_highlighted" class="absolute top-4 right-4 bg-[#78E0AF] text-green-900 text-xs font-bold px-3 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              À la une
+            </div>
+
+            <!-- Image de couverture -->
+            <div class="h-64 overflow-hidden bg-gray-100">
+              <img 
+                v-if="article.cover" 
+                :src="getImageUrl(article)" 
+                :alt="article.cover.alternativeText || article.title"
+                class="w-full h-full object-cover"
+              />
+            </div>
+            
+            <!-- Contenu de la carte -->
+            <div class="p-6 flex flex-col flex-grow">
+              <span v-if="article.category" class="text-sm text-[#14663E] font-semibold uppercase tracking-wider mb-2">
+                {{ article.category.name }}
+              </span>
+              <h3 class="text-2xl font-bold mb-3 text-gray-900">{{ article.title }}</h3>
+              <p class="text-gray-600 mb-6 line-clamp-3">{{ article.description }}</p>
+              
+              <div class="mt-auto flex items-center text-sm text-gray-500 font-medium">
+                <span v-if="article.author" class="mr-4">Par {{ article.author.name }}</span>
+                <span>{{ formatDateFrench(article.publishedAt) }}</span>
+              </div>
+            </div>
+          </NuxtLink>
+          <div class="mt-6">
+            <NuxtLink to="/blog" class="text-zinc-900 hover:underline underline font-semibold">Voir tout le blog →</NuxtLink>
+          </div>
+        </div>
+
+        <!-- Bouton "Voir tout" visible uniquement sur Mobile -->
+      
+    </section>
+
+    <!-- Section À propos / Histoire du Girofard -->
+    <section class="max-w-6xl mx-auto px-4 lg:px-0 py-16">
+      <div class="container mx-auto">
+        <!-- En-tête de la section -->
+        <h2 class="text-base uppercase text-zinc-900">À propos</h2>
+        <p class="text-2xl font-semibold text-zinc-900 mb-6 mr-32 lg:mr-0">Mais c'est quoi le Girofard ?</p>
+
+        <!-- Grille des 3 cartes -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+          
+          <!-- Carte 1 : Histoire -->
+          <div class="bg-[#F5FEF6] p-8 rounded-[10px] border border-black/5 transition-all transform flex flex-col">
+            <div class="w-14 h-14 bg-[#f1dcf1] text-[#925FB6] rounded-xl flex items-center justify-center mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-gray-900">Notre Histoire</h3>
+            <div class="text-gray-600 space-y-3 flex-grow">
+              <p>
+                En 2007, neuf associations luttant pour les droits LGBTQIAP+ décident de se réunir afin de créer un centre dédié à notre communauté.
+              </p>
+              <p>
+                Suite à une Assemblée Constituante le <strong>15 Mars 2007</strong> : Le Girofard est né. C'est aujourd'hui un rassemblement associatif unique, dont le CA est composé d'un maximum de 12 associations et 8 personnes physiques.
+              </p>
+            </div>
+          </div>
+
+          <!-- Carte 2 : L'Équipe -->
+          <div class="bg-[#F5FEF6] p-8 rounded-[10px] border border-black/5 transition-all transform flex flex-col">
+            <div class="w-14 h-14 bg-[#cbeaf3] text-cyan-600 rounded-xl flex items-center justify-center mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-gray-900">Notre Équipe</h3>
+            <div class="text-gray-600 space-y-3 flex-grow">
+              <p>
+                L'association est portée par une équipe salariée pluridisciplinaire : co-direction, chef·fe de service, chargé de mission médiateur en santé pair, animatrice socio-culturelle, comptable et psychologue.
+              </p>
+              <p>
+                Des <strong>bénévoles</strong> s'engagent également à nos côtés sur des missions longues ou ponctuelles, ainsi que des volontaires en service civique et des stagiaires.
+              </p>
+            </div>
+            <!-- <div class="mt-6 pt-6 border-t border-gray-100">
+              <a href="mailto:candidature@le-girofard.org" class="text-blue-600 font-semibold hover:text-blue-700 flex items-center gap-2 transition-colors">
+                Nous rejoindre en stage
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </a>
+            </div> -->
+          </div>
+
+          <!-- Carte 3 : Le CA -->
+          <div class="bg-[#F5FEF6] p-8 rounded-[10px] border border-black/5 transition-all transform flex flex-col">
+            <div class="w-14 h-14 bg-[#ffe2eb] text-[#de487f] rounded-xl flex items-center justify-center mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            </div>
+            <h3 class="text-2xl font-bold mb-4 text-gray-900">Le Conseil d'Administration</h3>
+            <div class="text-gray-600 space-y-3 flex-grow">
+              <p>
+                Composé de 10 à 20 membres (60% de personnes morales, 40% physiques), il se réunit mensuellement.
+              </p>
+              <p>
+                Il a pour rôle d'approuver le budget, de gérer les fonds, de définir les orientations stratégiques, et d'élire le bureau. Le CA veille également à la bonne avancée des projets.
+              </p>
+              <p class="text-sm italic mt-4">
+                * Les salarié·e·s peuvent assister aux réunions du CA, mais sans droit de vote.
+              </p>
+            </div>
+          </div>
+          <div class="mt-6">
+            <NuxtLink to="/faq#docs" class="text-zinc-900 hover:underline underline font-semibold">Voir les rapports d'activité →</NuxtLink>
+          </div>
+        </div>
       </div>
     </section>
     <!-- NEWSLETTER -->
     <section>
-      <div class="bg-[#f4a3a7] py-16 px-4 lg:px-0 mb-16">
-        <div class="w-full max-w-6xl mx-auto">
+      <div class="pt-16">
+        <div class="w-full max-w-6xl mx-auto bg-[#f9b8bb] py-16 px-8 lg:px-8 mb-16 lg:rounded-[10px]">
           <h2 class="text-base uppercase text-zinc-900">Newsletter</h2>
           <p class="text-2xl font-semibold text-black mb-6">Tu veux recevoir nos p'tites news dans ta boite mail ?</p>
           <p class="text-base text-black max-w-2xl mb-6">On t'enverra pas de spam, juste des infos sur nos événements, nos actions et tout ce qui se passe au Girofard !</p>
@@ -371,7 +515,7 @@ const subscribeToNewsletter = async () => {
                   type="text" 
                   id="input-group-1" 
                   v-model="emailInputLocal" 
-                  class="block w-full px-4 py-4 bg-neutral-secondary-medium rounded-[10px] border border-zinc-900 text-heading text-base rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body" 
+                  class="block w-full px-4 py-4 bg-neutral-secondary-medium rounded-[10px] border border-zinc-900 focus:bg-white text-heading text-base rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body transition-all" 
                   placeholder="giradresse@mail.com"
               >
             </div>
@@ -451,7 +595,7 @@ const subscribeToNewsletter = async () => {
       </div>
     </section>
     <!-- DEVELOPPEMENT -->
-    <section> 
+    <section class="hidden"> 
       <div class="text-center bg-[#A09FE3] py-32 flex flex-col md:items-center justify-center">
         <h2 class="text-4xl font-semibold text-black mb-2">Le site est encore en développement</h2>
         <p class="text-lg md:text-xl text-black px-2"><br />Pour toute demande, n'hésitez pas à nous contacter ou à passer au local !</p>

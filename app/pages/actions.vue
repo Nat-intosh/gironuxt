@@ -46,10 +46,10 @@ const getSliderFiles = (blocks: any[]) =>
     <div class="py-24 md:py-32 bg-[#D8D8FF]">
       <div class="px-4 lg:px-0 max-w-6xl mx-auto">
         <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
-          Nos actions
+          Nos interventions
         </h1>
         <p class="text-md md:text-lg mt-8 text-black max-w-lg">
-          Découvre ce qu'on fait concrètement sur le terrain, dans les écoles, les événements et les milieux professionnels.
+          Découvre les interventions qu'on propose sur le terrain, dans les écoles, les événements et les milieux professionnels.
         </p>
       </div>
     </div>
@@ -58,7 +58,7 @@ const getSliderFiles = (blocks: any[]) =>
   <!-- Actions list -->
   <section>
     <div class="max-w-6xl mx-auto px-4 lg:px-0 py-20 space-y-24">
-      <article v-for="item in actionItems" :key="item.id">
+      <article v-for="item in actionItems" :key="item.id" :id="item.slug" class="scroll-mt-32">
 
         <!-- Action name + short desc -->
        

@@ -4,8 +4,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   
-
-  modules: ['@tailwindcss/vite', '@nuxtjs/strapi', '@nuxt/image'], 
+  modules: ['@tailwindcss/vite', '@nuxtjs/strapi', '@nuxt/image', 'nuxt-mail'], 
   
   css: ['./app/assets/css/main.css'],
   
@@ -14,6 +13,20 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+  },
+
+  mail: {
+    message: {
+      from: 'contact@le-girofard.org',
+      to: 'contact@le-girofard.org',
+    },
+    smtp: {
+      service: 'gmail',
+      auth: {
+        user: 'contact@le-girofard.org',
+        pass: 'cfhf dssv shae vwzk',
+      },
+    },
   },
   
   runtimeConfig: {

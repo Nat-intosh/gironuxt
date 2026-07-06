@@ -10,6 +10,12 @@ useSeoMeta
   ogImage: 'https://admin.le-girofard.org/uploads/strapilogo_eced016137.png',
 })
 
+useHead({
+  htmlAttrs: {
+    class: 'scroll-smooth'
+  }
+})
+  
 </script>
 
 <template>

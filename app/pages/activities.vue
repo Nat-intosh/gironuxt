@@ -6,9 +6,12 @@ const { find } = useStrapi()
 const config = useRuntimeConfig()
 const nuxtApp = useNuxtApp()
 
-const { data: services } = await useAsyncData(
-  'services-page', // Changed from 'services'
-  () => find('services', {
+const { data: activitiesResponse } = await useAsyncData(
+  'activities-page',
+  () => find('services', { // On appelle bien l'API services
+    filters: {
+      is_an_activity: true // On ne garde QUE les activités
+    },
     populate: {
       blocks: { populate: '*' },
     },
@@ -21,7 +24,7 @@ const { data: services } = await useAsyncData(
 
 const strapiPublicUrl = config.public.strapi.strapiPublicUrl || 'http://localhost:1337'
 
-const serviceItems = computed(() => (services.value?.data as any[]) || [])
+const activityItems = computed(() => (activitiesResponse.value?.data as any[]) || [])
 
 const getFileUrl = (file: any) => {
   const path = file?.formats?.medium?.url
@@ -55,10 +58,10 @@ const setSliderIndex = (id: number, i: number) => {
     <div class="py-24 md:py-32 bg-[#D8D8FF] bg-no-repeat bg-cover">
       <div class="px-4 lg:px-0 max-w-6xl mx-auto">
         <h1 class="text-5xl md:text-6xl font-black max-w-xl text-black">
-          Nos services
+          Nos activités
         </h1>
         <p class="text-md md:text-lg mt-8 text-black max-w-lg">
-          Découvre ici ce qu'on propose au Girofard. Que tu aies besoin d'accompagnement, d'écoute ou juste d'un endroit sympa, t'es la·e bienvenu·e !
+          Découvre ici les activités conviviales du Girofard. Que ce soit pour passer du bon temps, pour découvrir d'autres personnes ou juste d'un endroit sympa, t'es la·e bienvenu·e !
         </p>
       </div>
     </div>
@@ -67,7 +70,7 @@ const setSliderIndex = (id: number, i: number) => {
   <!-- Services list -->
   <section>
     <div class="max-w-6xl mx-auto px-4 lg:px-0 py-20 space-y-24">
-      <article v-for="item in serviceItems" :key="item.id">
+      <article v-for="item in activityItems" :key="item.id" :id="item.slug" class="scroll-mt-32">
 
         <!-- Service name -->
         <h2 class="text-3xl font-bold text-zinc-900 mb-12">{{ item.name }}</h2>
