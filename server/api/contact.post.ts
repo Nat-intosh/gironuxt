@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     auth: {
       user: 'contact@le-girofard.org',
       // Remets ici ton mot de passe d'application Gmail
-      pass: 'cfhf dssv shae vwzk', 
+      pass: '', 
     }
   })
 
