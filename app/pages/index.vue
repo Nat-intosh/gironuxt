@@ -86,7 +86,35 @@ const getImageUrl = (item: any) => {
   return `${strapiPublicUrl}${path}`
 }
 
-const serviceItems = computed(() => (services.value?.data as any[]) || [])
+const serviceItems = computed(() => {
+  // On copie le tableau pour éviter de muter les données d'origine
+  const items = [...(services.value?.data as any[] || [])]
+
+  return items.sort((a, b) => {
+    // 1. Fonction pour attribuer une "priorité" à chaque groupe
+    const getGroupPriority = (item: any) => {
+      if (item.is_an_activity === false) return 1 // En premier : false
+      if (item.is_an_activity === true) return 2  // En deuxième : true
+      return 3                                    // En dernier : vide (null, undefined)
+    }
+
+    const priorityA = getGroupPriority(a)
+    const priorityB = getGroupPriority(b)
+
+    // 2. Si les éléments ne sont pas dans le même groupe, on trie par priorité
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB
+    }
+
+    // 3. S'ils sont dans le même groupe, on trie par ordre alphabétique sur le nom
+    const nameA = a.name || ''
+    const nameB = b.name || ''
+    
+    // localeCompare avec 'fr' permet de bien gérer les accents (é, à, etc.)
+    return nameA.localeCompare(nameB, 'fr')
+  })
+})
+
 const actionsItems = computed(() => (actions.value?.data as any[]) || [])
 const partenairesItems = computed(() => (partenaires.value?.data as any[]) || [])
 const assoAdherentesItems = computed(() => (assoAdherentes.value?.data as any[]) || [])
