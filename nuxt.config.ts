@@ -17,14 +17,14 @@ export default defineNuxtConfig({
 
   mail: {
     message: {
-      from: 'contact@le-girofard.org',
+      from: 'no-reply@le-girofard.org',
       to: 'contact@le-girofard.org',
     },
     smtp: {
       service: 'gmail',
       auth: {
-        user: 'contact@le-girofard.org',
-        pass: 'cfhf dssv shae vwzk',
+        user: 'no-reply@le-girofard.org',
+        pass: process.env.GMAIL_APP_KEY,
       },
     },
   },

@@ -61,6 +61,9 @@
                         <li><a href="https://www.instagram.com/legirofard/" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">Instagram</a></li>
                         <li><a href="https://www.youtube.com/@legirofardcentrelgbtqi966" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">Youtube</a></li>
                         <li><a href="https://fr.linkedin.com/company/le-girofard-centre-lgbtqia-de-bordeaux" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">LinkedIn</a></li>
+                        <li><a href="https://www.twitch.tv/legirofard" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">Twitch</a></li>
+                        <li><a href="https://www.facebook.com/girofard.bordeaux/" class="text-sm text-zinc-500 hover:text-zinc-700 transition-colors">Facebook</a></li>
+
                     </ul>
                 </div>
             </div>

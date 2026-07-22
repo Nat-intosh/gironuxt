@@ -75,25 +75,23 @@ const removeAttachment = () => {
 // 4. Soumission du formulaire (AVEC DEBUG COMPLET)
 const submitForm = async () => {
   if (!form.reasonId) {
-    console.error("DEBUG: Aucun motif sélectionné !");
     return;
   }
   
   isSubmitting.value = true;
   submitStatus.value = 'idle';
 
-  console.log("=== DÉBUT DU DEBUG EMAIL ===");
 
   try {
     // --- CHECK 1 : L'objet Raison ---
     const selectedReason = reasons.value.find(r => r.id === form.reasonId);
-    console.log("CHECK 1 - Motif trouvé dans Strapi :", selectedReason ? selectedReason.raison : 'NON TROUVÉ');
-    console.log("CHECK 1 - Mails bruts de Strapi :", {
-      mail1: selectedReason?.mail1,
-      mail2: selectedReason?.mail2,
-      mail3: selectedReason?.mail3,
-      mail4: selectedReason?.mail4
-    });
+    // console.log("CHECK 1 - Motif trouvé dans Strapi :", selectedReason ? selectedReason.raison : 'NON TROUVÉ');
+    // console.log("CHECK 1 - Mails bruts de Strapi :", {
+    //   mail1: selectedReason?.mail1,
+    //   mail2: selectedReason?.mail2,
+    //   mail3: selectedReason?.mail3,
+    //   mail4: selectedReason?.mail4
+    // });
 
     // --- CHECK 2 : Construction de la liste interne ---
     let internalEmails: string[] = [];
@@ -111,21 +109,19 @@ const submitForm = async () => {
 
     // Retirer les doublons internes
     internalEmails = [...new Set(internalEmails)];
-    console.log("CHECK 2 - Liste des mails internes (BCC) dédupliquée :", internalEmails);
 
     // --- CHECK 3 : Formatage STRICT pour Nodemailer ---
     // Nodemailer préfère "mail1@x.com, mail2@x.com" plutôt que ["mail1@x.com", "mail2@x.com"]
     const bccString = internalEmails.join(', ');
     const toString = form.contactmail || 'contact@le-girofard.org';
     
-    console.log("CHECK 3 - Formatage Nodemailer :");
-    console.log(" -> TO (Utilisateur) :", toString);
-    console.log(" -> BCC (Équipe) :", bccString);
 
     // --- CHECK 4 : Le contenu ---
     const textBody = `
 Bonjour, nous vous confirmons la bonne réception de votre message. 
 L'équipe du Girofard va vous répondre dans les meilleurs délais. 
+
+${selectedReason?.custom_message}
 
 Rappel des informations :
 - Nom / Prénom : ${form.name}
@@ -152,14 +148,12 @@ ${form.message}
         filename: attachmentName.value,
         path: attachmentBase64.value 
       }];
-      console.log("CHECK 5 - Pièce jointe attachée :", attachmentName.value);
     }
 
     // ON AFFICHE LE PAYLOAD FINAL AVANT ENVOI
-    console.log("=== PAYLOAD ENVOYÉ À NUXT-MAIL ===", JSON.parse(JSON.stringify(mailOptions)));
 
     // ON LANCE L'ENVOI
-    console.log("Envoi en cours vers le interne...");
+    
     await $fetch('/api/contact', {
       method: 'POST',
       body: mailOptions
@@ -169,8 +163,7 @@ ${form.message}
       method: 'POST',
       body: mailOptions
     });
-    
-    console.log("Réponse du serveur :", response);
+
 
     // Succès
     submitStatus.value = 'success';

@@ -13,21 +13,32 @@ const allEvents = ref<any[]>([])
 const hasMore = ref(true)
 const loadingMore = ref(false)
 
+// 1. Mise à jour des filtres API pour inclure la récurrence
+const todayISO = new Date().toISOString()
+const todayDateOnly = todayISO.split('T')[0] // Format YYYY-MM-DD pour recurring_end
+
+const eventFilters = {
+  $or: [
+    { date: { $gte: todayISO } },
+    { end_date: { $gte: todayISO } },
+    { 
+      $and: [
+        { is_recurring_event: true },
+        { recurring_end: { $gte: todayDateOnly } }
+      ]
+    }
+  ]
+}
+
 const { data: events } = await useAsyncData(
   'events',
   () => find('events', { 
     populate: ['cover', 'event_category'],
     pagination: { pageSize: PAGE_SIZE, page: 1 },
-    filters: {
-      $or: [
-        { date: { $gte: new Date().toISOString() } },
-        { end_date: { $gte: new Date().toISOString() } }
-      ]
-    }
+    filters: eventFilters
   })
 )
 
-// Initialize allEvents from SSR data
 if (events.value?.data) {
   allEvents.value = events.value.data
   hasMore.value = events.value.data.length === PAGE_SIZE
@@ -42,12 +53,7 @@ const loadMore = async () => {
     const result = await find('events', {
       populate: ['cover', 'event_category'],
       pagination: { pageSize: PAGE_SIZE, page: currentPage.value },
-      filters: {
-        $or: [
-          { date: { $gte: new Date().toISOString() } },
-          { end_date: { $gte: new Date().toISOString() } }
-        ]
-      }
+      filters: eventFilters
     })
 
     if (result?.data?.length) {
@@ -100,6 +106,66 @@ const closeModal = () => {
   }, 300)
 }
 
+// 2. Logique d'expansion des événements récurrents
+const expandedEvents = computed(() => {
+  const expanded: any[] = []
+  
+  // Mapping pour convertir le jour texte de Strapi en index JavaScript (Dimanche = 0)
+  const dayMap: Record<string, number> = { 
+    sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 
+  }
+
+  for (const ev of allEvents.value) {
+    // Si ce n'est pas récurrent, on l'ajoute tel quel
+    if (!ev.is_recurring_event) {
+      expanded.push(ev)
+      continue
+    }
+
+    const targetDay = dayMap[ev.recurring_day?.toLowerCase()]
+    
+    // Si la configuration récurrente est invalide, on ignore
+    if (targetDay === undefined || !ev.recurring_start) {
+      expanded.push(ev)
+      continue
+    }
+
+    let current = new Date(ev.recurring_start)
+    const end = ev.recurring_end ? new Date(ev.recurring_end) : new Date(current.getFullYear() + 1, current.getMonth(), current.getDate())
+    end.setHours(23, 59, 59, 999)
+
+    // On avance jusqu'au premier jour correspondant (ex: le premier Jeudi)
+    while (current.getDay() !== targetDay) {
+      current.setDate(current.getDate() + 1)
+    }
+
+    // On boucle de semaine en semaine jusqu'à la date de fin
+    while (current <= end) {
+      const occurrenceDate = new Date(current)
+      
+      // Ajout de l'heure si elle est définie dans Strapi
+      if (ev.recurring_hour) {
+        const [hours, minutes] = ev.recurring_hour.split(':')
+        occurrenceDate.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0)
+      }
+
+      // On clone l'événement en lui attribuant sa date générée
+      expanded.push({
+        ...ev,
+        // Création d'un ID unique pour éviter les conflits dans le v-for du template
+        synthetic_id: `${ev.id}-${occurrenceDate.getTime()}`,
+        date: occurrenceDate.toISOString(),
+        end_date: null // Une occurrence ponctuelle n'a généralement pas de date de fin sur plusieurs jours
+      })
+
+      // On ajoute 7 jours pour l'occurrence suivante
+      current.setDate(current.getDate() + 7)
+    }
+  }
+
+  return expanded
+})
+
 const categoryFilters = computed(() => {
   if (!allEvents.value.length) return []
   const categories = allEvents.value
@@ -109,7 +175,6 @@ const categoryFilters = computed(() => {
   return Array.from(new Set(categories))
 })
 
-// Helper: does an event overlap a given time window?
 const eventOverlaps = (event: any, windowStart: Date, windowEnd: Date) => {
   const start = new Date(event.date)
   start.setHours(0, 0, 0, 0)
@@ -124,10 +189,11 @@ const today = () => {
   return d
 }
 
+// 3. Mise à jour : upcomingEvents lit désormais expandedEvents au lieu de allEvents
 const upcomingEvents = computed(() => {
-  if (!allEvents.value.length) return []
+  if (!expandedEvents.value.length) return []
   const now = today()
-  return allEvents.value
+  return expandedEvents.value
     .filter((event: any) => {
       const endStr = event.end_date || event.date
       const end = new Date(endStr)
@@ -235,7 +301,7 @@ const toggleCategory = (category: string) => {
 
       <h3 v-if="filteredThisWeekEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4">Cette semaine</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <article v-for="item in filteredThisWeekEvents" :key="item.id">
+            <article v-for="item in filteredThisWeekEvents" :key="item.synthetic_id || item.id">
               <div 
                 @click="openModal(item)"
                 class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl lg:w-full h-full cursor-pointer bg-[#F5FEF6]"
@@ -258,7 +324,7 @@ const toggleCategory = (category: string) => {
 
       <h3 v-if="filteredNextWeekEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4 pt-16">Semaine prochaine</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <article v-for="item in filteredNextWeekEvents" :key="item.id">
+            <article v-for="item in filteredNextWeekEvents" :key="item.synthetic_id || item.id">
              <div 
                 @click="openModal(item)"
                 class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl lg:w-full h-full cursor-pointer bg-[#F5FEF6]"
@@ -281,7 +347,7 @@ const toggleCategory = (category: string) => {
 
       <h3 v-if="filteredRemainingEvents.length > 0" class="text-lg font-semibold text-zinc-900 py-4 pt-16">Prochainement</h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <article v-for="item in filteredRemainingEvents" :key="item.id">
+            <article v-for="item in filteredRemainingEvents" :key="item.synthetic_id || item.id">
               <div 
                 @click="openModal(item)"
                 class="flex p-2 border border-black/20 hover:border-black/60 transition-all duration-200 rounded-xl lg:w-full h-full cursor-pointer bg-[#F5FEF6]"

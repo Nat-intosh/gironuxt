@@ -8,9 +8,9 @@ export default defineEventHandler(async (event) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'contact@le-girofard.org',
+      user: 'no-reply@le-girofard.org',
       // Remets ici ton mot de passe d'application Gmail
-      pass: 'cfhf dssv shae vwzk', 
+      pass: process.env.GMAIL_APP_KEY, 
     }
   })
 

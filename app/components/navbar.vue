@@ -41,8 +41,8 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="#000">
                     <path d="M 3 7 A 1.0001 1.0001 0 1 0 3 9 L 27 9 A 1.0001 1.0001 0 1 0 27 7 L 3 7 z M 3 14 A 1.0001 1.0001 0 1 0 3 16 L 27 16 A 1.0001 1.0001 0 1 0 27 14 L 3 14 z M 3 21 A 1.0001 1.0001 0 1 0 3 23 L 27 23 A 1.0001 1.0001 0 1 0 27 21 L 3 21 z"></path>
                 </svg>
-            </button>
-        </div>
+            </button>          
+        </div>       
         <div class="mobile-menu fixed inset-x-0 top-[96px] bottom-0 z-20 bg-white px-6 pt-16 md:hidden opacity-0 invisible pointer-events-none touch-none">
             <ul class="flex flex-col space-y-8 text-xl text-black">
                 <!-- <li><nuxt-link to="/" class="text-xl">Accueil</nuxt-link></li> -->
@@ -92,10 +92,20 @@
             <div class="flex-1 bg-[#000000]"></div>
         </div>
     </nav>
+    <a v-if=global.data.big_announcement class="group block bg-surface hover:bg-surface-hover focus:outline-hidden focus:bg-surface-focus p-4 text-center transition duration-300 bg-[#f9b8bb]" href="#">
+        <div class="max-w-340 px-4 sm:px-6 lg:px-8 mx-auto">
+            <p class="me-2 inline-block text-sm text-foreground">
+                {{global?.data.big_announcement }}
+            </p>
+        </div>
+</a>
 </template>
 
 <script setup>
 import { onMounted, ref, computed } from 'vue'
+
+const config = useRuntimeConfig()
+const nuxtApp = useNuxtApp()
 
 // 1. Variable pour gérer l'ouverture du sous-menu sur Mobile
 const isMobileServicesOpen = ref(false)
@@ -131,6 +141,13 @@ onMounted(() => {
     })
   })
 })
+
+const { data: global } = await useAsyncData(
+  'global',
+  () => find('global', { populate: ['defaultSeo', 'favicon', 'pride_banner'] }),
+  { getCachedData: (key) => nuxtApp.payload.data[key] ?? nuxtApp.static.data[key] }
+)
+
 
 </script>
 
