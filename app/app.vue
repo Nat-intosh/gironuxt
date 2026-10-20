@@ -18,12 +18,12 @@ useHead({
     {
       // Runs first, so the settings exist when the widget loads
       innerHTML: `window.LibredeskSettings = {
-        baseURL: 'http://chat.le-girofard.org',
+        baseURL: 'https://chat.le-girofard.org',
         inboxID: '344c9070-72d5-4ea4-a560-9ce33fa2ba65'
       };`,
     },
     {
-      src: 'http://chat.le-girofard.org/widget.js',
+      src: 'https://chat.le-girofard.org/widget.js',
       defer: true,
     },
   ],
