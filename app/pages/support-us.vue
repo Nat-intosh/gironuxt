@@ -39,7 +39,7 @@ const isImage = (mime: string) => mime?.startsWith('image/')
           Nous soutenir
         </h1>
         <p class="text-md md:text-lg mt-8 text-black max-w-lg">
-          Découvre ici les différents moyens de soutenir les activités du Girofard. Que ce soit pour les activités à l'anéne ou le mois des fiertés, on a toujours besoin de soutiens !
+          Découvre ici les différents moyens de soutenir les activités du Girofard. Que ce soit pour les activités à l'année ou le mois des fiertés, on a toujours besoin de soutiens !
         </p>
       </div>
     </div>

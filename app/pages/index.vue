@@ -271,7 +271,7 @@ const subscribeToNewsletter = async () => {
                 <p class="text-left text-md md:text-lg mt-8 text-black max-w-lg">
                   Le Girofard est le centre pour les personnes lesbiennes, gays, bi·es, trans, intersexes, non binaires et leurs allié·es de Bordeaux. Il a pour objectif d’être un lieu d’accueil, d’écoute et de convivialité.</p>
                 <div class="flex items-center gap-4 mt-8">
-                    <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-200 text-black active:scale-95 transition-all" type="button" href="https://www.helloasso.com/associations/girofard">
+                    <a class="px-8 py-3 rounded-[10px] bg-white hover:bg-gray-200 border border-gray-200 text-black active:scale-95 transition-all" type="button" href="/support-us">
                         nous soutenir
                     </a>
                     <a class="px-5 py-3 rounded-[10px] bg-[#78E0AF] text-black font-semibold flex items-center gap-2 hover:bg-indigo-600/5 active:scale-95 transition-all" type="button" href="/contact">
